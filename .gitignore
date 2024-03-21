@@ -1,5 +1,7 @@
 src/*
 !src/*.*
+.vscode
+**/.DS_Store
 
 # Prerequisites
 *.d
