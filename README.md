@@ -10,7 +10,7 @@ Physics:
 
 - White Ball with cue
 - White ball with the walls
-- Friction with the cloth (rolling)
+- Friction with the cloth (non-rolling)
 
 Shooting:
 
