@@ -10,6 +10,7 @@
 const float CLASSIC_WIDTH = 96.0f; // 8ft, no cushion
 const float CLASSIC_HEIGHT = 48.0f; // 4ft, no cushion
 const float CLASSIC_INNER_PADDING = 1.0f;
+const float CLASSIC_OUTER_MARGIN = 6.0f - CLASSIC_INNER_PADDING;
 const float CLASSIC_CORNER_MOUTH = 4.5;
 const float CLASSIC_SIDE_MOUTH = 5;
 const float CLASSIC_CORNER_ANGLE = 142; // in degrees
