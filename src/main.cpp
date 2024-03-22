@@ -9,7 +9,7 @@ using namespace sf;
 
 int main() {
     // Initialize the window
-    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE);
+    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
 
     Vector2f shape[] = {
         Vector2f(),
