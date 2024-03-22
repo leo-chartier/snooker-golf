@@ -7,9 +7,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-Cue::Cue(sf::Vector2f position, sf::Vector2f rotation) {
+Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle) {
     this->position = position;
     this->rotation = rotation;
+    this->power = 0;
+    this->angle = 0;
 }
 
 void Cue::getPosition(sf::RenderWindow &window) {
@@ -24,6 +26,8 @@ void Cue::getRotation(sf::RenderWindow &window) {
 }
 
 void Cue::Draw(sf::RenderWindow* window) {
+    this->getPosition(*window);
+    this->getRotation(*window);
     sf::Vector2f size = sf::Vector2f(CUE_LENGTH, CUE_TIP_WIDTH);
     size = positionToScreen(size) - positionToScreen(sf::Vector2f());
     sf::RectangleShape cueR = sf::RectangleShape(size);

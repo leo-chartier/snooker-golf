@@ -19,7 +19,7 @@ int main() {
         Vector2f(0, CLASSIC_HEIGHT),
     };
     Table table = Table(shape, 4);
-    Cue cue = Cue(Vector2f(500, 200), Vector2f(0,0));
+    Cue cue = Cue(Vector2f(500, 200), Vector2f(0,0), 0, 0);
 
     while (window.isOpen()) {
         Event event;

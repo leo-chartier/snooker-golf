@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "colors.hpp"
-
 class Cue {
     public:
         sf::Vector2f position;
@@ -13,7 +11,7 @@ class Cue {
         float power;
         float angle;
 
-        Cue(sf::Vector2f position, sf::Vector2f rotation);
+        Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle);
         void getPosition(sf::RenderWindow &window);
         void getRotation(sf::RenderWindow &window);
         void Draw(sf::RenderWindow* window);
