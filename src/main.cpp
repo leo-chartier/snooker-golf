@@ -1,13 +1,10 @@
-#include <math.h>
-
-#include <SFML/Graphics.hpp>
+#include "display.cpp"
 #include <iostream>
+#include <math.h>
+#include <SFML/Graphics.hpp>
+
 using namespace std;
 using namespace sf;
-
-#define SCREEN_W 1200
-#define SCREEN_H 800
-#define TITLE "SFML TITLE"
 
 int main() {
     // Initialize the window
@@ -22,9 +19,7 @@ int main() {
 
         // Processing here
 
-        window.clear();
-        // Display here
-        window.display();
+        drawGame(&window);
     }
 
     return 0;
