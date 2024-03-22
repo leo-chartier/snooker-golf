@@ -10,6 +10,7 @@ using namespace sf;
 int main() {
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE);
+    initializeWindowPosition(&window);
 
     Vector2f shape[] = {
         Vector2f(),
