@@ -3,6 +3,7 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include "table.cpp"
+#include "cue.cpp"
 
 using namespace std;
 using namespace sf;
@@ -18,6 +19,7 @@ int main() {
         Vector2f(0, CLASSIC_HEIGHT),
     };
     Table table = Table(shape, 4);
+    Cue cue = Cue(Vector2f(500, 200), Vector2f(0,0));
 
     while (window.isOpen()) {
         Event event;
@@ -28,7 +30,7 @@ int main() {
 
         // Processing here
 
-        drawGame(&window, &table);
+        drawGame(&window, &table, &cue);
     }
 
     return 0;

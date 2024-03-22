@@ -2,7 +2,10 @@
 
 #include "measurements.hpp"
 #include "table.hpp"
+#include "cue.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <math.h>
 
 using namespace sf;
 
@@ -25,12 +28,15 @@ Vector2f positionToScreen(Vector2f position) {
     return position * scale + Vector2f(xOffset, yOffset);
 }
 
-void drawGame(RenderWindow* window, Table* table) {
+void drawGame(RenderWindow* window, Table* table, Cue* cue) {
     window->clear();
 
     table->Draw(window);
 
     // TODO: Pockets, balls and cue
+
+    // Draw the cue
+    cue->Draw(window);
 
     window->display();
 }
