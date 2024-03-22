@@ -18,12 +18,14 @@ class scoreBoard : player {
     int calcScore(){
         if (ballInHole=1) {
             score = score+1;
+            return;
         }
     };
 
     int shootNum(){
         if(playerTouchBall=1){
             shoot = shoot+1;
+            return;
         }
     };
 
@@ -45,7 +47,7 @@ int main() {
     P2.calcScore();
     P2.shootNum();
 
-    sf :: Text text;
+    sf::Text text;
 
 
     text.setFont(font);
@@ -58,6 +60,5 @@ int main() {
 
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    window.draw(text);
 
 }
