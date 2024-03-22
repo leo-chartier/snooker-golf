@@ -29,7 +29,7 @@ int main() {
         }
 
         // Processing here
-
+        cue.setPower(window);
         drawGame(&window, &table, &cue);
     }
 
