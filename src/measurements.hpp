@@ -1,5 +1,5 @@
 #ifndef GAME_MEASUREMENTS
-#define GAME_MESUREMENTS
+#define GAME_MEASUREMENTS
 #include <SFML/Graphics.hpp>
 
 // Sources:

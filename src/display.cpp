@@ -1,7 +1,7 @@
 #include "display.hpp"
 
-#include "colors.hpp"
 #include "measurements.hpp"
+#include "table.hpp"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -25,32 +25,10 @@ Vector2f positionToScreen(Vector2f position) {
     return position * scale + Vector2f(xOffset, yOffset);
 }
 
-void drawGame(RenderWindow* window) {
-    // TODO: Add table as parameter
-
+void drawGame(RenderWindow* window, Table* table) {
     window->clear();
 
-    // Draw the rails
-    Vector2f railsTL = positionToScreen(Vector2f(
-        -CLASSIC_OUTER_MARGIN,
-        -CLASSIC_OUTER_MARGIN
-    ));
-    Vector2f railsBR = positionToScreen(Vector2f(
-        CLASSIC_WIDTH + CLASSIC_OUTER_MARGIN,
-        CLASSIC_HEIGHT + CLASSIC_OUTER_MARGIN
-    ));
-    RectangleShape rails = RectangleShape(railsBR - railsTL);
-    rails.move(railsTL);
-    rails.setFillColor(RAILS_COLOR);
-    window->draw(rails);
-
-    // Draw the cloth
-    Vector2f clothTL = positionToScreen(Vector2f());
-    Vector2f clothBR = positionToScreen(Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT));
-    RectangleShape cloth = RectangleShape(clothBR - clothTL);
-    cloth.move(clothTL);
-    cloth.setFillColor(CLOTH_COLOR);
-    window->draw(cloth);
+    table->Draw(window);
 
     // TODO: Pockets, balls and cue
 
