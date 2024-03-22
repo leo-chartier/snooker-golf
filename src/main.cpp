@@ -28,7 +28,7 @@ int main() {
 
         // Processing here
 
-        drawGame(&window);
+        drawGame(&window, &table);
     }
 
     return 0;
