@@ -24,8 +24,13 @@ int main()
     };
     Table table = Table(shape, 4);
 
-    CueBall cueBall = CueBall(Vector2f(SCREEN_W / 3, ((SCREEN_H - CLASSIC_HEIGHT) / 2 + (CLASSIC_WIDTH / 2))), BALL_RADIUS, CUE_BALL_COLOR);
-    Ball ball = Ball(Vector2f((2 * CLASSIC_WIDTH) / 3, CLASSIC_HEIGHT / 2), BALL_RADIUS, BALL_COLOR);
+    CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
+    Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, BALL_COLOR);
+
+    sf::Clock clock;
+
+    // TEMP
+    cueBall.Velocity.x = 180.0f;
 
     while (window.isOpen())
     {
@@ -37,6 +42,9 @@ int main()
         }
 
         // Processing here
+        float dt = clock.restart().asSeconds();
+        cueBall.Update(dt);
+        // ball.Update(dt);
 
         drawGame(&window, &ball, &cueBall, &table);
     }

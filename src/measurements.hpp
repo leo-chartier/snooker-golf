@@ -19,6 +19,7 @@ const float CLASSIC_SIDE_ANGLE = 104; // in degrees
 const float BALL_RADIUS = 1.125f; // in inches
 const float BALL_WEIGHT = 170.0f; // in grams
 const float BALL_FRICTION_COEFFICIENT = 0.2; // (ball-cloth)
+const float ACCELERATION_DUE_TO_GRAVITY = 386.0885826772; // in/s² = 9.8 m/s²
 
 const float CUE_LENGTH = 40.0f; // in inches
 const float CUE_TIP_WIDTH = 0.5; // in inches (=14 mm)
