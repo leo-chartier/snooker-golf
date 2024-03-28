@@ -12,6 +12,7 @@ int main()
 {
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
+    initializeWindowPosition(&window);
 
     Vector2f shape[] = {
         Vector2f(),
