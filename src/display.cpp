@@ -25,12 +25,14 @@ Vector2f positionToScreen(Vector2f position) {
     return position * scale + Vector2f(xOffset, yOffset);
 }
 
-void drawGame(RenderWindow* window, Table* table) {
+void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) {
     window->clear();
 
     table->Draw(window);
 
     // TODO: Pockets, balls and cue
+    window->draw(*ball);
+    window->draw(*cueBall);
 
     window->display();
 }

@@ -1,3 +1,4 @@
+#include "balls.cpp"
 #include "display.cpp"
 #include <iostream>
 #include <math.h>
@@ -7,7 +8,8 @@
 using namespace std;
 using namespace sf;
 
-int main() {
+int main()
+{
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
 
@@ -19,16 +21,21 @@ int main() {
     };
     Table table = Table(shape, 4);
 
-    while (window.isOpen()) {
+    CueBall cueBall = CueBall(Vector2f(SCREEN_W / 3, ((SCREEN_H - CLASSIC_HEIGHT) / 2 + (CLASSIC_WIDTH / 2))), BALL_RADIUS, CUE_BALL_COLOR);
+    Ball ball = Ball(Vector2f((2 * CLASSIC_WIDTH) / 3, CLASSIC_HEIGHT / 2), BALL_RADIUS, BALL_COLOR);
+
+    while (window.isOpen())
+    {
         Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event))
+        {
             if (event.type == Event::Closed)
                 window.close();
         }
 
         // Processing here
 
-        drawGame(&window, &table);
+        drawGame(&window, &ball, &cueBall, &table);
     }
 
     return 0;
