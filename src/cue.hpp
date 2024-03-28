@@ -12,6 +12,8 @@ class Cue {
         sf::Vector2i end;
         float power;
         float angle;
+        bool check;
+        bool startSet;
 
         Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle);
         void getPosition(sf::RenderWindow &window);

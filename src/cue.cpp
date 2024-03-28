@@ -12,6 +12,8 @@ Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle)
     this->rotation = rotation;
     this->power = 0;
     this->angle = 0;
+    this->check = false;
+    this->startSet = false;
 }
 
 void Cue::getPosition(sf::RenderWindow &window) {
@@ -39,15 +41,19 @@ void Cue::Draw(sf::RenderWindow* window) {
 
 void Cue::setPower(sf::RenderWindow &window) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        sf::Vector2i trueStart = sf::Mouse::getPosition(window);
-        start = sf::Mouse::getPosition(window);
-        while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            end = sf::Mouse::getPosition(window);
-            position = position + sf::Vector2f(end.x - start.x, end.y - start.y);
-            start = end;
-            drawGame(&window, NULL, this);
+        if (!startSet){
+            start = sf::Mouse::getPosition(window);
+            check = true;
+            startSet = true;
         }
-        power = sqrt(pow(end.x - trueStart.x, 2) + pow(end.y - trueStart.y, 2));
+        sf::Vector2i mouse = sf::Mouse::getPosition(window);
+        position = sf::Vector2f(500.0f + mouse.x - start.x, 200.0f + mouse.y - start.y);
     }
-    position = sf::Vector2f(500, 200); // TODO: replace with whiteball position
+    else if (check) {
+        end = sf::Mouse::getPosition(window);
+        check = false;
+        startSet = false;
+        power = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
+        position = sf::Vector2f(500, 200); // TODO: replace with whiteball position
+    }
 }
