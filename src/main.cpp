@@ -12,6 +12,8 @@ int main()
 {
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
+    VideoMode desktop = sf::VideoMode::getDesktopMode();
+    window.setPosition(Vector2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2));
     initializeWindowPosition(&window);
 
     Vector2f shape[] = {
