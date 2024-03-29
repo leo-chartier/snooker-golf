@@ -33,7 +33,7 @@ void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table, 
     window->draw(*cueBall);
 
     // Draw the cue
-    cue->Draw(window);
+    cue->Draw(window, *cueBall);
 
     window->display();
 }

@@ -24,10 +24,11 @@ int main()
         Vector2f(0, CLASSIC_HEIGHT),
     };
     Table table = Table(shape, 4);
-    Cue cue = Cue(Vector2f(500, 200), Vector2f(0,0), 0, 0);
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
+
+    Cue cue = Cue(cueBall.Position, Vector2f(0,0), 0, 0);
 
     sf::Clock clock;
 
@@ -45,12 +46,12 @@ int main()
 
         // Processing here
         float dt = clock.restart().asSeconds();
-        cue.setPower(window)
+        cue.setPower(window, &cueBall);
         cueBall.Update(dt, &ball);
         ball.Update(dt, &cueBall);
 
         // test(&window);
-        drawGame(&window, &ball, &cueBall, &table);
+        drawGame(&window, &ball, &cueBall, &table, &cue);
     }
 
     return 0;
