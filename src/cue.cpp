@@ -64,7 +64,6 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall) {
         check = false;
         startSet = false;
         power = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
-        std::cout << "Power: " << power << std::endl;
         position = cueBall->Position;
         cueBall->Velocity = sf::Vector2f(-power * cos(angle * M_PI / 180), -power * sin(angle * M_PI / 180));
     }
