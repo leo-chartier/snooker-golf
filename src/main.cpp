@@ -28,12 +28,56 @@ int main()
     Table table = Table(shape, 4);
 
     // The list of pockets
-    std::vector<Pocket> pocketList = {Pocket(Vector2f(-4, -4), CLASSIC_SIDE_MOUTH/2.5),
-                            Pocket(Vector2f(96, -4), CLASSIC_SIDE_MOUTH/2.5),
-                            Pocket(Vector2f(96, 48), CLASSIC_SIDE_MOUTH/2.5),
-                            // Pocket(Vector2f(96, 48), CLASSIC_SIDE_MOUTH/2.5),
-                            // Pocket(Vector2f(0, 0), CLASSIC_SIDE_MOUTH/2.5),
-                            Pocket(Vector2f(-4, 48), CLASSIC_SIDE_MOUTH/2.5)};
+    std::vector<Pocket> pocketList = {Pocket(Vector2f(12, 12), 2), // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
+                            Pocket(Vector2f(12, 8), 2),
+                            Pocket(Vector2f(16, 8), 2),
+                            Pocket(Vector2f(20, 8), 2),
+                            Pocket(Vector2f(24, 8), 2),
+                            Pocket(Vector2f(28, 8), 2),
+                            Pocket(Vector2f(32, 8), 2),
+                            Pocket(Vector2f(36, 8), 2),
+                            Pocket(Vector2f(40, 8), 2),
+                            Pocket(Vector2f(44, 8), 2),
+                            Pocket(Vector2f(48, 8), 2),
+                            Pocket(Vector2f(52, 8), 2),
+                            Pocket(Vector2f(56, 8), 2),
+                            Pocket(Vector2f(60, 8), 2),
+                            Pocket(Vector2f(64, 8), 2),
+                            Pocket(Vector2f(68, 8), 2),
+                            Pocket(Vector2f(72, 8), 2),
+                            Pocket(Vector2f(76, 8), 2),
+                            Pocket(Vector2f(80, 8), 2),
+                            Pocket(Vector2f(80, 12), 2),
+                            Pocket(Vector2f(80, 16), 2),
+                            Pocket(Vector2f(80, 20), 2),
+                            Pocket(Vector2f(80, 24), 2),
+                            Pocket(Vector2f(80, 28), 2),
+                            Pocket(Vector2f(80, 32), 2),
+                            Pocket(Vector2f(80, 36), 2),
+                            Pocket(Vector2f(76, 36), 2),
+                            Pocket(Vector2f(72, 36), 2),
+                            Pocket(Vector2f(68, 36), 2),
+                            Pocket(Vector2f(64, 36), 2),
+                            Pocket(Vector2f(60, 36), 2),
+                            Pocket(Vector2f(56, 36), 2),
+                            Pocket(Vector2f(52, 36), 2),
+                            Pocket(Vector2f(48, 36), 2),
+                            Pocket(Vector2f(44, 36), 2),
+                            Pocket(Vector2f(40, 36), 2),
+                            Pocket(Vector2f(36, 36), 2),
+                            Pocket(Vector2f(32, 36), 2),
+                            Pocket(Vector2f(28, 36), 2),
+                            Pocket(Vector2f(24, 36), 2),
+                            Pocket(Vector2f(20, 36), 2),
+                            Pocket(Vector2f(16, 36), 2),
+                            Pocket(Vector2f(12, 36), 2),
+                            Pocket(Vector2f(12, 32), 2),
+                            Pocket(Vector2f(12, 28), 2),
+                            Pocket(Vector2f(12, 24), 2),
+                            Pocket(Vector2f(12, 20), 2),
+                            Pocket(Vector2f(12, 16), 2),
+                            Pocket(Vector2f(12, 12), 2),
+                            };
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
@@ -41,7 +85,7 @@ int main()
     sf::Clock clock;
 
     // TEMP
-    cueBall.Velocity.x = 150.0f;
+    cueBall.Velocity.x = 115.0f;
 
     while (window.isOpen())
     {
@@ -57,13 +101,27 @@ int main()
         cueBall.Update(dt, &ball);
         ball.Update(dt, &cueBall);
 
+        // Check collision with each hole
+        for (auto& pocket : pocketList) {
+
+            // Check if ball came in contact with any of the pockets
+            if (pocket.isBallInPocket(ball)) {
+                std::cout << "The ball has fallen!" << "\n";
+            }
+            
+            // Check if cue ball (...)
+            if (pocket.isBallInPocket(cueBall)) {
+                std::cout << "The cue ball has fallen!" << "\n";
+            }
+        }
+
         // test(&window);
-        drawGame(&window, &ball, &cueBall, &table, pocketList, 4);
+        drawGame(&window, &ball, &cueBall, &table, pocketList, 50); // The number after pocketlist represents the number of pockets to draw
     }
 
     return 0;
 }
-/*
+
 void test(RenderWindow* window) {
     window->clear();
 
@@ -121,4 +179,3 @@ void test(RenderWindow* window) {
     drawLine(window, p3, p3 + v2_, Color::White);
     window->display();
 }
-*/
