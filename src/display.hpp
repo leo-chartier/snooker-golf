@@ -3,11 +3,14 @@
 
 #include <SFML/Graphics.hpp>
 
-#define SCREEN_W 1200
-#define SCREEN_H 800
+const unsigned int SCREEN_W = 1200;
+const unsigned int SCREEN_H = 800;
 #define TITLE "SFML TITLE"
 
-sf::Vector2f positionToScreen(sf::Vector2f);
+float windowScale = 1.0f;
+
+void initializeWindowPosition(sf::Vector2f);
 void drawGame(sf::RenderWindow*);
+void drawLine(RenderWindow*, Vector2f, Vector2f, Color);
 
 #endif
