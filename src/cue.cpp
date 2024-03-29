@@ -21,6 +21,9 @@ void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
     if (cueBall.Velocity.x != 0 || cueBall.Velocity.y != 0) {
         return;
     }
+    if (!check){
+        position = cueBall.Position;
+    }
     sf::Vector2f size = sf::Vector2f(CUE_LENGTH, CUE_TIP_WIDTH);
     sf::RectangleShape cueR = sf::RectangleShape(size);
     cueR.setFillColor(sf::Color::White);
@@ -61,6 +64,8 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall) {
         check = false;
         startSet = false;
         power = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
+        std::cout << "Power: " << power << std::endl;
         position = cueBall->Position;
+        cueBall->Velocity = sf::Vector2f(-power * cos(angle * M_PI / 180), -power * sin(angle * M_PI / 180));
     }
 }

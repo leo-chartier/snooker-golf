@@ -32,9 +32,6 @@ int main()
 
     sf::Clock clock;
 
-    // TEMP
-    cueBall.Velocity.x = 150.0f;
-
     while (window.isOpen())
     {
         Event event;
