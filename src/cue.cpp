@@ -28,6 +28,7 @@ void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
     sf::RectangleShape cueR = sf::RectangleShape(size);
     cueR.setFillColor(sf::Color::White);
 
+    cueR.setOrigin( - 2*BALL_RADIUS, CUE_TIP_WIDTH/2);
     cueR.setPosition(position.x, position.y);
 
     // Scale the coordinates of the mouse to the view of the window
