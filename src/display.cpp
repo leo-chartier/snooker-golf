@@ -2,7 +2,10 @@
 
 #include "measurements.hpp"
 #include "table.hpp"
+#include "cue.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <math.h>
 
 using namespace sf;
 
@@ -20,7 +23,7 @@ void initializeWindowPosition(RenderWindow* window) {
     window->setView(view);
 }
 
-void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) {
+void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table, Cue* cue) {
     window->clear();
 
     table->Draw(window);
@@ -28,6 +31,9 @@ void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) 
     // TODO: Pockets, balls and cue
     window->draw(*ball);
     window->draw(*cueBall);
+
+    // Draw the cue
+    cue->Draw(window, *cueBall);
 
     window->display();
 }

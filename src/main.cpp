@@ -4,6 +4,7 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include "table.cpp"
+#include "cue.cpp"
 
 using namespace std;
 using namespace sf;
@@ -27,10 +28,9 @@ int main()
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
 
-    sf::Clock clock;
+    Cue cue = Cue(cueBall.Position, Vector2f(0,0), 0, 0);
 
-    // TEMP
-    cueBall.Velocity.x = 150.0f;
+    sf::Clock clock;
 
     while (window.isOpen())
     {
@@ -43,11 +43,12 @@ int main()
 
         // Processing here
         float dt = clock.restart().asSeconds();
+        cue.setPower(window, &cueBall);
         cueBall.Update(dt, &ball);
         ball.Update(dt, &cueBall);
 
         // test(&window);
-        drawGame(&window, &ball, &cueBall, &table);
+        drawGame(&window, &ball, &cueBall, &table, &cue);
     }
 
     return 0;
