@@ -2,6 +2,7 @@
 
 #include "measurements.hpp"
 #include "table.hpp"
+#include "pocket.hpp"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -20,10 +21,15 @@ void initializeWindowPosition(RenderWindow* window) {
     window->setView(view);
 }
 
-void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) {
+void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table, std::vector<Pocket> pocketList, size_t pocketCount) {
     window->clear();
 
     table->Draw(window);
+
+    // Draw the pockets
+    for (size_t i = 0; i < pocketCount; i++){
+        pocketList[i].Draw(window);
+    }
 
     // TODO: Pockets, balls and cue
     window->draw(*ball);

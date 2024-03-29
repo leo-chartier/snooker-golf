@@ -4,6 +4,7 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include "table.cpp"
+#include "pocket.cpp"
 
 using namespace std;
 using namespace sf;
@@ -22,7 +23,17 @@ int main()
         Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
         Vector2f(0, CLASSIC_HEIGHT),
     };
+
+
     Table table = Table(shape, 4);
+
+    // The list of pockets
+    std::vector<Pocket> pocketList = {Pocket(Vector2f(-4, -4), CLASSIC_SIDE_MOUTH/2.5),
+                            Pocket(Vector2f(96, -4), CLASSIC_SIDE_MOUTH/2.5),
+                            Pocket(Vector2f(96, 48), CLASSIC_SIDE_MOUTH/2.5),
+                            // Pocket(Vector2f(96, 48), CLASSIC_SIDE_MOUTH/2.5),
+                            // Pocket(Vector2f(0, 0), CLASSIC_SIDE_MOUTH/2.5),
+                            Pocket(Vector2f(-4, 48), CLASSIC_SIDE_MOUTH/2.5)};
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
@@ -47,12 +58,12 @@ int main()
         ball.Update(dt, &cueBall);
 
         // test(&window);
-        drawGame(&window, &ball, &cueBall, &table);
+        drawGame(&window, &ball, &cueBall, &table, pocketList, 4);
     }
 
     return 0;
 }
-
+/*
 void test(RenderWindow* window) {
     window->clear();
 
@@ -110,3 +121,4 @@ void test(RenderWindow* window) {
     drawLine(window, p3, p3 + v2_, Color::White);
     window->display();
 }
+*/
