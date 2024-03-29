@@ -28,6 +28,8 @@ bool isConvex(Vector2f v0, Vector2f v1, Vector2f v2) {
 Table::Table(Vector2f shapeArray[], size_t length) {
     if (length < 3) return; // TODO: Error: Needs at least 3 points
     if (length > 64) return; // TODO: Error: Implementation need at most 64 points
+    this->nPoints = length;
+    this->points = shapeArray;
     this->nTriangles = length - 2;
     this->triangles = new ConvexShape[nTriangles];
 
@@ -60,9 +62,11 @@ Table::Table(Vector2f shapeArray[], size_t length) {
 
 Table::~Table(void) {
     delete[] triangles;
+    printf("===== DESTRUCTOR =====\n"); std::flush(std::cout);
 }
 
 void Table::Draw(RenderWindow* window) {
+    printf("===== TABLE DRAW =====\n"); std::flush(std::cout);
     // TODO: Dynamic display with the shape
 
     // Draw the rails
@@ -77,6 +81,8 @@ void Table::Draw(RenderWindow* window) {
     // Draw the cloth
     RectangleShape cloth = RectangleShape(Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT));
     for (size_t index = 0; index < nTriangles; index++) {
-        window->draw(triangles[index]);
+        ConvexShape triangle = this->triangles[index];
+        printf("===== OK =====\n"); std::flush(std::cout);
+        window->draw(triangle);
     }
 }

@@ -14,17 +14,18 @@ int main()
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.setPosition(Vector2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2));
-    initializeWindowPosition(&window);
 
     Vector2f shape[] = {
         Vector2f(),
-        Vector2f(CLASSIC_WIDTH / 4, 0),
-        Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 4),
-        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT / 4),
-        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
+        Vector2f(CLASSIC_WIDTH / 2, 0),
+        Vector2f(CLASSIC_WIDTH / 2, CLASSIC_HEIGHT / 4),
+        Vector2f(CLASSIC_WIDTH * 2, CLASSIC_HEIGHT / 4),
+        Vector2f(CLASSIC_WIDTH * 2, CLASSIC_HEIGHT),
         Vector2f(0, CLASSIC_HEIGHT),
     };
     Table table = Table(shape, sizeof(shape) / sizeof(Vector2f));
+    initializeWindowPosition(&window, table);
+    printf("===== AFTER RETURN =====\n"); std::flush(std::cout);
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
