@@ -18,6 +18,9 @@ Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle)
 }
 
 void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
+    if (cueBall.Velocity.x != 0 || cueBall.Velocity.y != 0) {
+        return;
+    }
     sf::Vector2f size = sf::Vector2f(CUE_LENGTH, CUE_TIP_WIDTH);
     sf::RectangleShape cueR = sf::RectangleShape(size);
     cueR.setFillColor(sf::Color::White);
@@ -47,15 +50,17 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall) {
             check = true;
             startSet = true;
         }
-        sf::Vector2i mouse = sf::Mouse::getPosition(window);
-        position = sf::Vector2f(cueBall->Position.x + mouse.x - start.x, cueBall->Position.y + mouse.y - start.y);
+        
+        sf::Vector2f mouse = (sf::Vector2f)sf::Mouse::getPosition(window);
+        sf::Vector2f scaledMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        sf::Vector2f scaledStart = (sf::Vector2f)window.mapPixelToCoords(start);
+        position = sf::Vector2f(cueBall->Position.x + scaledMouse.x - scaledStart.x, cueBall->Position.y + scaledMouse.y - scaledStart.y);
     }
     else if (check) {
         end = sf::Mouse::getPosition(window);
         check = false;
         startSet = false;
         power = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
-        std::cout << "Power: " << power << std::endl;
         position = cueBall->Position;
     }
 }
