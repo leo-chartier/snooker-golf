@@ -18,11 +18,13 @@ int main()
 
     Vector2f shape[] = {
         Vector2f(),
-        Vector2f(CLASSIC_WIDTH, 0),
+        Vector2f(CLASSIC_WIDTH / 4, 0),
+        Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 4),
+        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT / 4),
         Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
         Vector2f(0, CLASSIC_HEIGHT),
     };
-    Table table = Table(shape, 4);
+    Table table = Table(shape, sizeof(shape) / sizeof(Vector2f));
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
@@ -42,9 +44,9 @@ int main()
         }
 
         // Processing here
-        float dt = clock.restart().asSeconds();
-        cueBall.Update(dt, &ball);
-        ball.Update(dt, &cueBall);
+        // float dt = clock.restart().asSeconds();
+        // cueBall.Update(dt, &ball);
+        // ball.Update(dt, &cueBall);
 
         // test(&window);
         drawGame(&window, &ball, &cueBall, &table);

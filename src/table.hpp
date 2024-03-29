@@ -7,8 +7,8 @@
 class Table {
 
     public:
-        sf::Vector2f* shape;
-        size_t shapeLength;
+        sf::ConvexShape* triangles;
+        size_t nTriangles;
         // Pocket pocketArray[];
         float frictionCoefficient = BALL_FRICTION_COEFFICIENT;
 
