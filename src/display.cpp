@@ -31,3 +31,11 @@ void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) 
 
     window->display();
 }
+
+void drawLine(RenderWindow* window, Vector2f p1, Vector2f p2, Color color) {
+    Vertex line[2] = {
+        Vertex(p1, color),
+        Vertex(p2, color)
+    };
+    window->draw(line, 2, sf::Lines);
+}

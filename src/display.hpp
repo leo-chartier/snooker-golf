@@ -11,5 +11,6 @@ float windowScale = 1.0f;
 
 void initializeWindowPosition(sf::Vector2f);
 void drawGame(sf::RenderWindow*);
+void drawLine(RenderWindow*, Vector2f, Vector2f, Color);
 
 #endif

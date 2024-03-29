@@ -1,6 +1,7 @@
 #ifndef GAME_BALLS
 #define GAME_BALLS
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 #include "measurements.hpp"
 #include "utils.cpp"
@@ -24,7 +25,8 @@ class Ball : public CircleShape {
         setFillColor(c);
     }
 
-    void Update(float dt) {
+    void Update(float dt, Ball* otherBall) {
+        Vector2f newPosition = Position;
         Vector2f forceFriction = BALL_FRICTION_COEFFICIENT * BALL_WEIGHT * ACCELERATION_DUE_TO_GRAVITY * normalize(Velocity);
         Vector2f forceAdditional = Vector2f(); // None for now
         Vector2f acceleration = (forceAdditional - forceFriction) / BALL_WEIGHT;
@@ -32,26 +34,54 @@ class Ball : public CircleShape {
         Velocity += acceleration * dt;
         if (vectorLength(Velocity) <= MIN_VELOCITY)
             Velocity.x = Velocity.y = 0;
-        Position += Velocity * dt;
+        newPosition += Velocity * dt;
 
         // Collision with the rails
-        if (Position.x < BALL_RADIUS) {
-            Position.x = 2 * BALL_RADIUS - Position.x;
+        if (newPosition.x < BALL_RADIUS) {
+            newPosition.x = 2 * BALL_RADIUS - newPosition.x;
             Velocity.x = -Velocity.x;
         }
-        if (Position.x > CLASSIC_WIDTH - BALL_RADIUS) {
-            Position.x = 2 * (CLASSIC_WIDTH - BALL_RADIUS) - Position.x;
+        if (newPosition.x > CLASSIC_WIDTH - BALL_RADIUS) {
+            newPosition.x = 2 * (CLASSIC_WIDTH - BALL_RADIUS) - newPosition.x;
             Velocity.x = -Velocity.x;
         }
-        if (Position.y < BALL_RADIUS) {
-            Position.y = 2 * BALL_RADIUS - Position.y;
+        if (newPosition.y < BALL_RADIUS) {
+            newPosition.y = 2 * BALL_RADIUS - newPosition.y;
             Velocity.y = -Velocity.y;
         }
-        if (Position.y > CLASSIC_HEIGHT - BALL_RADIUS) {
-            Position.y = 2 * (CLASSIC_HEIGHT - BALL_RADIUS) - Position.y;
+        if (newPosition.y > CLASSIC_HEIGHT - BALL_RADIUS) {
+            newPosition.y = 2 * (CLASSIC_HEIGHT - BALL_RADIUS) - newPosition.y;
             Velocity.y = -Velocity.y;
         }
 
+        // Check for collisions with the other balls
+        Vector2f projection = project(otherBall->Position, Position, newPosition);
+        float distanceToProjection = vectorLength(otherBall->Position - projection);
+        if (distanceToProjection < 2 * BALL_RADIUS) {
+            // Calculate the position at which the collision takes place
+            Vector2f direction = normalize(newPosition - Position);
+            float diameter2 = 4 * BALL_RADIUS * BALL_RADIUS;
+            float offsetFromProjection = sqrt(diameter2 - distanceToProjection * distanceToProjection);
+            Vector2f hit = projection - direction * offsetFromProjection;
+
+            // Calculate the new velocities for both balls
+            Vector2f relativePosition = otherBall->Position - hit;
+            Vector2f relativeVelocity = otherBall->Velocity - Velocity;
+            float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
+            float factor = dotProduct / diameter2;
+            Vector2f v1 = Velocity + factor * relativePosition;
+            Vector2f v2 = otherBall->Velocity + factor * relativePosition;
+
+            // Update the positions
+            float remainingFactor = vectorLength(newPosition - Position) / vectorLength(newPosition - hit);
+            newPosition = hit + v1 * dt * remainingFactor;
+            otherBall->Position += v2 * dt * remainingFactor;
+            otherBall->setPosition(otherBall->Position);
+            Velocity = v1;
+            otherBall->Velocity = v2;
+        }
+
+        Position = newPosition;
         setPosition(Position);
     }
 };
