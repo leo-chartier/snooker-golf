@@ -6,14 +6,14 @@ using namespace std;
 
 class player {
     virtual int (calcScore()) = 0;
-    virtual int (shootNum()) = 0;
+    virtual int (shoot()) = 0;
+    virtual int (PlaceWhieBall()) = 0;
 
 };
 
 class scoreBoard : player {
     public:
     int score;
-    int shoot;
 
     int calcScore(){
         if (ballInHole=1) {
@@ -22,18 +22,19 @@ class scoreBoard : player {
         }
     };
 
-    int shootNum(){
-        if(playerTouchBall=1){
-            shoot = shoot+1;
-            return;
-        }
-    };
-
 };
 
 class ballPosition : player {
     public:
-    int placewhiteball;
+    int shoot(){
+        
+        return;
+    };
+
+    int Placewhitball(){
+
+        return;
+    };
 
 };
 
@@ -43,22 +44,20 @@ int main() {
     scoreBoard P1;
     scoreBoard P2;
     P1.calcScore();
-    P1.shootNum();
     P2.calcScore();
-    P2.shootNum();
 
-    sf::Text text;
+    // sf::Text text;
 
 
-    text.setFont(font);
+    // text.setFont(font);
 
-    text.setString("Scoreboard :");
+    // text.setString("Scoreboard :");
 
-    text.setCharacterSize(24);
+    // text.setCharacterSize(24);
 
-    text.setFillColor(sf::Color::Red);
+    // text.setFillColor(sf::Color::Red);
 
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    // text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
 }
