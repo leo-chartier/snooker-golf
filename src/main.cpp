@@ -1,5 +1,6 @@
 #include "balls.cpp"
 #include "display.cpp"
+#include "player.cpp"
 #include <iostream>
 #include <math.h>
 #include <SFML/Graphics.hpp>
@@ -27,6 +28,9 @@ int main()
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
 
+    Player player = Player(0, 0);
+    ScoreBoard score = ScoreBoard(player);
+
     sf::Clock clock;
 
     // TEMP
@@ -47,7 +51,7 @@ int main()
         ball.Update(dt, &cueBall);
 
         // test(&window);
-        drawGame(&window, &ball, &cueBall, &table);
+        drawGame(&window, &ball, &cueBall, &table, &score);
     }
 
     return 0;
