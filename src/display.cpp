@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <math.h>
+#include <vector>
 
 using namespace sf;
 
@@ -23,13 +24,17 @@ void initializeWindowPosition(RenderWindow* window) {
     window->setView(view);
 }
 
-void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table, Cue* cue) {
+void drawGame(RenderWindow* window, std::vector<Ball> ballsList, CueBall* cueBall, Table* table, Cue* cue) {
     window->clear();
 
     table->Draw(window);
 
     // TODO: Pockets, balls and cue
-    window->draw(*ball);
+    for (int i = 0; i < ballsList.size(); i++) {
+        Ball ball = ballsList[i];
+        window->draw(ball);
+    }
+    //window->draw(*ball);
     window->draw(*cueBall);
 
     // Draw the cue

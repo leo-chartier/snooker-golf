@@ -1,14 +1,20 @@
-#ifndef GAME_BALLS
-#define GAME_BALLS
-#include <SFML/Graphics.hpp>
+#ifndef BALLS_HPP
+#define BALLS_HPP
+
+#include <vector>
 #include <iostream>
+#include <math.h>
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 #include "measurements.hpp"
+#include "colors.hpp"
 #include "utils.cpp"
 
 using namespace sf;
 
-float MIN_VELOCITY = 0.01;
+float MIN_VELOCITY = 0.01f;
 
 class Ball : public CircleShape {
     public:
@@ -25,7 +31,7 @@ class Ball : public CircleShape {
         setFillColor(c);
     }
 
-    void Update(float dt, Ball* otherBall) {
+    void Update(int checkedBalls, float dt, std::vector<Ball>& balls) {
         Vector2f newPosition = Position;
         Vector2f forceFriction = BALL_FRICTION_COEFFICIENT * BALL_WEIGHT * ACCELERATION_DUE_TO_GRAVITY * normalize(Velocity);
         Vector2f forceAdditional = Vector2f(); // None for now
@@ -55,30 +61,35 @@ class Ball : public CircleShape {
         }
 
         // Check for collisions with the other balls
-        Vector2f projection = project(otherBall->Position, Position, newPosition);
-        float distanceToProjection = vectorLength(otherBall->Position - projection);
-        if (distanceToProjection < 2 * BALL_RADIUS) {
-            // Calculate the position at which the collision takes place
-            Vector2f direction = normalize(newPosition - Position);
-            float diameter2 = 4 * BALL_RADIUS * BALL_RADIUS;
-            float offsetFromProjection = sqrt(diameter2 - distanceToProjection * distanceToProjection);
-            Vector2f hit = projection - direction * offsetFromProjection;
+        for (int i = checkedBalls; i < balls.size(); i++) {
+            if (&balls[i] == this) continue; // Skip self
+            if (dotProduct(balls[i].Velocity, balls[checkedBalls].Velocity) > 0.f) continue; // Skip if the balls are moving away from each other
 
-            // Calculate the new velocities for both balls
-            Vector2f relativePosition = otherBall->Position - hit;
-            Vector2f relativeVelocity = otherBall->Velocity - Velocity;
-            float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
-            float factor = dotProduct / diameter2;
-            Vector2f v1 = Velocity + factor * relativePosition;
-            Vector2f v2 = otherBall->Velocity + factor * relativePosition;
+            Vector2f projection = project(balls[i].Position, Position, newPosition);
+            float distanceToProjection = vectorLength(balls[i].Position - projection);
+            if (distanceToProjection < 2 * BALL_RADIUS) {
+                // Calculate the position at which the collision takes place
+                Vector2f direction = normalize(newPosition - Position);
+                float diameter2 = 4 * BALL_RADIUS * BALL_RADIUS;
+                float offsetFromProjection = sqrt(diameter2 - distanceToProjection * distanceToProjection);
+                Vector2f hit = projection - direction * offsetFromProjection;
 
-            // Update the positions
-            float remainingFactor = vectorLength(newPosition - Position) / vectorLength(newPosition - hit);
-            newPosition = hit + v1 * dt * remainingFactor;
-            otherBall->Position += v2 * dt * remainingFactor;
-            otherBall->setPosition(otherBall->Position);
-            Velocity = v1;
-            otherBall->Velocity = v2;
+                // Calculate the new velocities for both balls
+                Vector2f relativePosition = balls[i].Position - hit;
+                Vector2f relativeVelocity = balls[i].Velocity - Velocity;
+                float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
+                float factor = dotProduct / diameter2;
+                Vector2f v1 = Velocity + factor * relativePosition;
+                Vector2f v2 = balls[i].Velocity + factor * relativePosition;
+
+                // Update the positions
+                float remainingFactor = vectorLength(newPosition - Position) / vectorLength(newPosition - hit);
+                newPosition = hit + v1 * dt * remainingFactor;
+                balls[i].Position += v2 * dt * remainingFactor;
+                balls[i].setPosition(balls[i].Position);
+                Velocity = v1;
+                balls[i].Velocity = v2;
+            }
         }
 
         Position = newPosition;
