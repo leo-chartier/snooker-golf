@@ -15,7 +15,6 @@ class Table {
         float frictionCoefficient = BALL_FRICTION_COEFFICIENT;
 
         Table(sf::Vector2f points[], size_t length);
-        ~Table(void);
         void Draw(sf::RenderWindow* window);
 };
 

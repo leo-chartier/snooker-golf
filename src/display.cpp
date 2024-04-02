@@ -25,12 +25,12 @@ void initializeWindowPosition(RenderWindow* window, Table table) {
         float yOuter = table.points[index].y;
         xInnerMin = std::min(xInnerMin, xInner);
         xInnerMax = std::max(xInnerMax, xInner);
-        xInnerMin = std::min(xInnerMin, yInner);
-        xInnerMax = std::max(xInnerMax, yInner);
+        yInnerMin = std::min(yInnerMin, yInner);
+        yInnerMax = std::max(yInnerMax, yInner);
         xOuterMin = std::min(xOuterMin, xOuter);
         xOuterMax = std::max(xOuterMax, xOuter);
-        xOuterMin = std::min(xOuterMin, yOuter);
-        xOuterMax = std::max(xOuterMax, yOuter);
+        yOuterMin = std::min(yOuterMin, yOuter);
+        yOuterMax = std::max(yOuterMax, yOuter);
     }
 
     float tableWidth = xInnerMax - xInnerMin;
@@ -38,16 +38,15 @@ void initializeWindowPosition(RenderWindow* window, Table table) {
     float tableHeight = yInnerMax - yInnerMin;
     float fullTableHeight = yOuterMax - yOuterMin;
 
-    float scale = std::min(SCREEN_W / fullTableWidth, SCREEN_H / fullTableHeight);
-    float scaledScreenWidth = SCREEN_W / scale;
-    float scaledScreenHeight = SCREEN_H / scale;
+    float scale = std::max(fullTableWidth / SCREEN_W, fullTableHeight / (SCREEN_H * (1 - MIN_HEADER_RATIO)));
+    float scaledScreenWidth = SCREEN_W * scale;
+    float scaledScreenHeight = SCREEN_H * scale;
 
     // TODO: If height >>> width
-    Vector2f center = sf::Vector2f(tableWidth / 2, tableHeight + CLASSIC_OUTER_MARGIN - scaledScreenHeight / 2);
-    Vector2f size = sf::Vector2f(scaledScreenWidth, scaledScreenHeight);
+    Vector2f center = Vector2f((xOuterMax + xOuterMin) / 2, tableHeight + CLASSIC_OUTER_MARGIN - scaledScreenHeight / 2);
+    Vector2f size = Vector2f(scaledScreenWidth, scaledScreenHeight);
     View view = View(center, size);
     window->setView(view);
-    printf("===== BEFORE RETURN =====\n"); std::flush(std::cout);
 }
 
 void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table) {

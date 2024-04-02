@@ -54,19 +54,14 @@ Table::Table(Vector2f shapeArray[], size_t length) {
         triangle.setPoint(0, previousVertex);
         triangle.setPoint(1, vertex);
         triangle.setPoint(2, nextVertex);
-        triangle.setFillColor(CLOTH_COLOR);
+        // triangle.setFillColor(CLOTH_COLOR);
+        triangle.setFillColor(Color(std::rand() % 255, std::rand() % 255, std::rand() % 255));
         this->triangles[iteration] = triangle;
         remaining &= ~vertexMask;
     }
 }
 
-Table::~Table(void) {
-    delete[] triangles;
-    printf("===== DESTRUCTOR =====\n"); std::flush(std::cout);
-}
-
 void Table::Draw(RenderWindow* window) {
-    printf("===== TABLE DRAW =====\n"); std::flush(std::cout);
     // TODO: Dynamic display with the shape
 
     // Draw the rails
@@ -79,10 +74,8 @@ void Table::Draw(RenderWindow* window) {
     window->draw(rails);
 
     // Draw the cloth
-    RectangleShape cloth = RectangleShape(Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT));
     for (size_t index = 0; index < nTriangles; index++) {
         ConvexShape triangle = this->triangles[index];
-        printf("===== OK =====\n"); std::flush(std::cout);
         window->draw(triangle);
     }
 }

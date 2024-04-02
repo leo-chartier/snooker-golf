@@ -8,8 +8,10 @@
 using namespace std;
 using namespace sf;
 
+#include <time.h>
 int main()
 {
+    srand(time(NULL)); // TEMP
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -25,7 +27,6 @@ int main()
     };
     Table table = Table(shape, sizeof(shape) / sizeof(Vector2f));
     initializeWindowPosition(&window, table);
-    printf("===== AFTER RETURN =====\n"); std::flush(std::cout);
 
     CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
     Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
