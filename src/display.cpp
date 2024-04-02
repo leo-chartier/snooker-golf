@@ -3,6 +3,7 @@
 #include "measurements.hpp"
 #include "table.hpp"
 #include "cue.hpp"
+#include "pocket.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <math.h>
@@ -24,18 +25,28 @@ void initializeWindowPosition(RenderWindow* window) {
     window->setView(view);
 }
 
-void drawGame(RenderWindow* window, std::vector<Ball> ballsList, CueBall* cueBall, Table* table, Cue* cue) {
+void drawGame(RenderWindow* window, std::Vector<Ball>* balls, CueBall* cueBall, Table* table, std::vector<Pocket> pocketList, size_t pocketCount) {
     window->clear();
 
     table->Draw(window);
 
-    // TODO: Pockets, balls and cue
+    // Draw the pockets
+    for (size_t i = 0; i < pocketCount; i++){
+        pocketList[i].Draw(window);
+    }
+
+    // Draw the ball if it's active
     for (int i = 0; i < ballsList.size(); i++) {
         Ball ball = ballsList[i];
-        window->draw(ball);
+        if (ball->IsActive()) {
+            window->draw(*ball);
+        }
     }
-    //window->draw(*ball);
-    window->draw(*cueBall);
+    
+    // Draw the cue ball if it's active
+    if (cueBall->IsActive()) {
+        window->draw(*cueBall);
+    }
 
     // Draw the cue
     cue->Draw(window, *cueBall);

@@ -23,6 +23,7 @@ class Ball : public CircleShape {
     Color BallColor;
     float Radius;
     float Mass;
+    bool isActive = true;
 
     Ball(Vector2f p, double r, Color c) : Position(p), Radius(r), BallColor(c) {
         setRadius(r);
@@ -30,6 +31,16 @@ class Ball : public CircleShape {
         move(p);
         setFillColor(c);
     }
+
+    
+    void setInactive() {
+    isActive = false;
+    }
+
+    bool IsActive() const {
+        return isActive;
+    }
+
 
     void Update(int checkedBalls, float dt, std::vector<Ball>& balls) {
         Vector2f newPosition = Position;
