@@ -31,9 +31,15 @@ void drawGame(RenderWindow* window, Ball* ball, CueBall* cueBall, Table* table, 
         pocketList[i].Draw(window);
     }
 
-    // TODO: Pockets, balls and cue
-    window->draw(*ball);
-    window->draw(*cueBall);
+    // Draw the ball if it's active
+    if (ball->IsActive()) {
+        window->draw(*ball);
+    }
+    
+    // Draw the cue ball if it's active
+    if (cueBall->IsActive()) {
+        window->draw(*cueBall);
+    }
 
     window->display();
 }

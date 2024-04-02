@@ -85,7 +85,7 @@ int main()
     sf::Clock clock;
 
     // TEMP
-    cueBall.Velocity.x = 130.0f;
+    cueBall.Velocity.x = 150.0f;
 
     while (window.isOpen())
     {
@@ -98,8 +98,15 @@ int main()
 
         // Processing here
         float dt = clock.restart().asSeconds();
-        cueBall.Update(dt, &ball);
-        ball.Update(dt, &cueBall);
+        
+        if (cueBall.IsActive()) {
+            cueBall.Update(dt, &ball);
+        }
+
+        if (ball.IsActive()) {
+            ball.Update(dt, &cueBall);
+        }
+
 
         // Check collision with each hole
         for (auto& pocket : pocketList) {
@@ -107,11 +114,13 @@ int main()
             // Check if ball came in contact with any of the pockets
             if (pocket.isBallInPocket(ball)) {
                 std::cout << "The ball has fallen!" << "\n";
+                ball.setInactive();
             }
             
             // Check if cue ball (...)
             if (pocket.isBallInPocket(cueBall)) {
                 std::cout << "The cue ball has fallen!" << "\n";
+                cueBall.setInactive();
             }
         }
 
