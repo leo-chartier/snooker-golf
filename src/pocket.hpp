@@ -16,7 +16,7 @@ class Pocket {
         bool isBallInPocket(const Ball& ball);
 
     private:
-        // A pocket is defined by it's radius and its position
+        // A pocket is defined by its radius and position
         sf::Vector2f pocketPosition;
         float pocketRadius;
 

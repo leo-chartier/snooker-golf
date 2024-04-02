@@ -85,7 +85,7 @@ int main()
     sf::Clock clock;
 
     // TEMP
-    cueBall.Velocity.x = 115.0f;
+    cueBall.Velocity.x = 130.0f;
 
     while (window.isOpen())
     {
@@ -120,62 +120,4 @@ int main()
     }
 
     return 0;
-}
-
-void test(RenderWindow* window) {
-    window->clear();
-
-    Vector2f p1 = Vector2f(CLASSIC_WIDTH * 0.2, 0);
-    Vector2f p2 = Vector2f(CLASSIC_WIDTH * 0.8, CLASSIC_HEIGHT * 0.5);
-    Vector2f p3 = Vector2f(CLASSIC_WIDTH * 0.6, CLASSIC_HEIGHT * 0.7);
-    Vector2f v1 = normalize(p2 - p1) * 10.0f;
-    Vector2f v2 = Vector2f(0, 0);
-    float r = 10;
-    Vector2 offset(r, r);
-
-    Vector2f projection = project(p3, p1, p2);
-    float distance = vectorLength(p3 - projection);
-    Vector2f direction = normalize(p2 - p1);
-    float distanceToProjection = sqrt(4 * r * r - distance * distance);
-    Vector2f hit = projection - direction * distanceToProjection;
-    Vector2f relativePosition = p3 - hit;
-    Vector2f relativeVelocity = v2 - v1;
-    float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
-    float factor = dotProduct / (distance * distance);
-    Vector2f v1_ = v1 + factor * relativePosition;
-    Vector2f v2_ = v2 - factor * relativePosition;
-    float remainingFactor = vectorLength(p2 - p1) / vectorLength(p2 - hit);
-    Vector2f p2_ = hit + v1_ * remainingFactor;
-    Vector2f p3_ = p3 + v2_ * remainingFactor;
-
-    CircleShape end_(r);
-    end_.setPosition(p2_ - offset);
-    end_.setFillColor(Color::Cyan);
-    window->draw(end_);
-    CircleShape other_(r);
-    other_.setPosition(p3_ - offset);
-    other_.setFillColor(Color::Magenta);
-    window->draw(other_);
-    CircleShape start(r);
-    start.setPosition(p1 - offset);
-    start.setFillColor(Color::White);
-    window->draw(start);
-    CircleShape end(r);
-    end.setPosition(p2 - offset);
-    end.setFillColor(Color::White);
-    window->draw(end);
-    CircleShape other(r);
-    other.setPosition(p3 - offset);
-    other.setFillColor(Color::Red);
-    window->draw(other);
-    CircleShape hitBall(r);
-    hitBall.setPosition(hit - offset);
-    hitBall.setFillColor(Color::Blue);
-    window->draw(hitBall);
-
-    drawLine(window, p1, p2, Color::Green);
-    // drawLine(window, p3, projection, Color::White);
-    drawLine(window, hit, hit + v1_, Color::White);
-    drawLine(window, p3, p3 + v2_, Color::White);
-    window->display();
 }
