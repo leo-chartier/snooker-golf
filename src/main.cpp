@@ -102,44 +102,37 @@ int main()
                 window.close();
         }
 
-        // Processing here
         float dt = clock.restart().asSeconds();
-        
-        if (cueBall.IsActive()) {
-            cueBall.Update(dt, &ball);
-        }
-
-        if (ball.IsActive()) {
-            ball.Update(dt, &cueBall);
-        }
-
-
         // Check collision with each hole
-        for (auto& pocket : pocketList) {
+        cue.setPower(window, &cueBall);
+        for (int i = 0; i < ballsList.size(); i++) {
+            for (auto& pocket : pocketList) {
 
             // Check if ball came in contact with any of the pockets
-            if (pocket.isBallInPocket(ball)) {
-                std::cout << "The ball has fallen!" << "\n";
-                ball.setInactive();
-            }
-            
-            // Check if cue ball (...)
-            if (pocket.isBallInPocket(cueBall)) {
-                std::cout << "The cue ball has fallen!" << "\n";
-                cueBall.setInactive();
-            }
-        }
+                if (pocket.isBallInPocket(ballsList[i])) {
+                    std::cout << "The ball has fallen!" << "\n";
+                    ballsList[i].setInactive();
+                }
 
-        float dt = clock.restart().asSeconds();
-        cue.setPower(window, &cueBall);
-        cueBall.Update(0, dt, &ball);
-        for (int i = 0; i < ballsList.size(); i++) {
-            ball.Update(i, dt, &cueBall);
+                // Check if cue ball (...)
+                if (pocket.isBallInPocket(cueBall)) {
+                    std::cout << "The cue ball has fallen!" << "\n";
+                    cueBall.setInactive();
+                }
+            }
+
+            if (cueBall.IsActive()) {
+                cueBall.Update(0, dt, ballsList);
+            }
+
+            if (ballsList[i].IsActive()) {
+                ballsList[i].Update(i, dt, ballsList);
+            }
         }
 
 
         // test(&window);
-        drawGame(&window, &ballsList, &cueBall, &table, pocketList, 50); // The number after pocketlist represents the number of pockets to draw
+        drawGame(&window, ballsList, &cue,  &cueBall, &table, pocketList, 50); // The number after pocketlist represents the number of pockets to draw
     }
 
     return 0;
