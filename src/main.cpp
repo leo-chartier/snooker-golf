@@ -54,11 +54,28 @@ int main()
     backgroundMusic.setLoop(true); // Make the music loop
     backgroundMusic.play();
 
+    // Music
+    sf::Music ambienceCrowd;
+    if (!ambienceCrowd.openFromFile("assets/ambience.ogg")) // Use your music file path here
+    {
+        return -1; // Error loading the file
+    }
+    
+    ambienceCrowd.setLoop(true); // Make the music loop
+    ambienceCrowd.play();
+
 
     // Main menu scene objects initialization
     // Create font
     Font font;
     if (!font.loadFromFile("assets/arial.ttf")) // Change the path to your font file
+    {
+        std::cerr << "Error loading font file" << std::endl;
+        return 1;
+    }
+
+    Font font2;
+    if (!font.loadFromFile("assets/signalbq.otf")) // Change the path to your font file
     {
         std::cerr << "Error loading font file" << std::endl;
         return 1;
