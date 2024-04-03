@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "table.cpp"
 
 using namespace std;
@@ -42,6 +43,17 @@ int main()
     // TEMP
     // This has to be fixed as it launches the ball before seing the scene
     cueBall.Velocity.x = 150.0f;
+
+    // Music
+    sf::Music backgroundMusic;
+    if (!backgroundMusic.openFromFile("assets/tatum.ogg")) // Use your music file path here
+    {
+        return -1; // Error loading the file
+    }
+    
+    backgroundMusic.setLoop(true); // Make the music loop
+    backgroundMusic.play();
+
 
     // Main menu scene objects initialization
     // Create font
