@@ -71,11 +71,6 @@ int main()
     float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
     float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-    cout << "Scale X: " << scaleX << endl;
-    cout << "Scale Y: " << scaleY << endl;
-
-    // Set the scale of the background sprite
-    // background.setScale(scaleX/10, scaleY/10);
     background.setScale(0.075, 0.075);
 
     // Create menu options
