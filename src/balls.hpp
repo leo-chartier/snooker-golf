@@ -15,6 +15,7 @@
 using namespace sf;
 
 float MIN_VELOCITY = 0.01f;
+float MAX_VELOCITY = 100.f;
 
 class Ball : public CircleShape {
     public:
@@ -74,6 +75,7 @@ class Ball : public CircleShape {
         // Check for collisions with the other balls
         for (int i = checkedBalls; i < balls.size(); i++) {
             if (&balls[i] == this) continue; // Skip self
+            if (!balls[i].IsActive()) continue; // Skip inactive balls
             if (dotProduct(balls[i].Velocity, balls[checkedBalls].Velocity) > 0.f) continue; // Skip if the balls are moving away from each other
 
             Vector2f projection = project(balls[i].Position, Position, newPosition);
@@ -92,14 +94,20 @@ class Ball : public CircleShape {
                 float factor = dotProduct / diameter2;
                 Vector2f v1 = Velocity + factor * relativePosition;
                 Vector2f v2 = balls[i].Velocity + factor * relativePosition;
+                if (vectorLength(v1) > MAX_VELOCITY){
+                    v1 = normalize(v1) * MAX_VELOCITY;
+                }
+                if (vectorLength(v2) > MAX_VELOCITY){
+                    v2 = normalize(v2) * MAX_VELOCITY;
+                }
 
                 // Update the positions
                 float remainingFactor = vectorLength(newPosition - Position) / vectorLength(newPosition - hit);
                 newPosition = hit + v1 * dt * remainingFactor;
                 balls[i].Position += v2 * dt * remainingFactor;
                 balls[i].setPosition(balls[i].Position);
-                Velocity = v1;
-                balls[i].Velocity = v2;
+                Velocity = v1/2.F;
+                balls[i].Velocity = v2/2.F;
             }
         }
 
