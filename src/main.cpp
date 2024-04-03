@@ -9,12 +9,18 @@
 using namespace std;
 using namespace sf;
 
+enum class Scene
+{
+    MainMenu,
+    PoolScene
+};
+
 int main()
 {
-    // Initialize the window
+    // Initialize the window for pool scene
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.setPosition(Vector2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2));
+    window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
     initializeWindowPosition(&window);
 
     Vector2f shape[] = {
@@ -34,7 +40,55 @@ int main()
     sf::Clock clock;
 
     // TEMP
+    // This has to be fixed as it launches the ball before seing the scene
     cueBall.Velocity.x = 150.0f;
+
+    // Main menu scene objects initialization
+    // Create font
+    Font font;
+    if (!font.loadFromFile("assets/arial.ttf")) // Change the path to your font file
+    {
+        std::cerr << "Error loading font file" << std::endl;
+        return 1;
+    }
+
+    // Create menu options
+    Text option1;
+    Text option2;
+    Text option3;
+
+    // Set text for menu options
+    option1.setFont(font);
+    option2.setFont(font);
+    option3.setFont(font);
+
+    option1.setString("Play Pool");
+    option2.setString("Scene 2");
+    option3.setString("Exit");
+
+    // Set character size for menu options
+    option1.setCharacterSize(45);
+    option2.setCharacterSize(45);
+    option3.setCharacterSize(45);
+
+    option1.setScale(0.1f, 0.1f);
+    option2.setScale(0.1f, 0.1f);
+    option3.setScale(0.1f, 0.1f);
+
+    // Set positions for menu options
+    option1.setPosition(20, 10);
+    option2.setPosition(20, 20);
+    option3.setPosition(20, 30);
+
+    // Set colors for menu options
+    option1.setFillColor(Color::Red);
+    option2.setFillColor(Color::Red);
+    option3.setFillColor(Color::Red);
+
+    // Scene choosing
+    // By default, we start the game on the main menu to choose the game we are going to play
+
+    Scene currentScene = Scene::MainMenu;
 
     while (window.isOpen())
     {
@@ -42,22 +96,54 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)
+            {
                 window.close();
+            }
+            else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left)
+            {
+                Vector2f mousePos = window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+                if (currentScene == Scene::MainMenu)
+                {
+                    if (option1.getGlobalBounds().contains(mousePos))
+                    {
+                        currentScene = Scene::PoolScene;
+                    }
+                    else if (option2.getGlobalBounds().contains(mousePos))
+                    {
+                        cout << "Scene 2" << endl;
+                    }
+                    else if (option3.getGlobalBounds().contains(mousePos))
+                    {
+                        window.close();
+                    }
+                }
+            }
         }
 
-        // Processing here
-        float dt = clock.restart().asSeconds();
-        cueBall.Update(dt, &ball);
-        ball.Update(dt, &cueBall);
-
-        // test(&window);
-        drawGame(&window, &ball, &cueBall, &table, &score);
+        if (currentScene == Scene::MainMenu)
+        {
+            window.clear();
+            window.draw(option1);
+            window.draw(option2);
+            window.draw(option3);
+            window.display();
+        }
+        else if (currentScene == Scene::PoolScene)
+        {
+            // Processing here
+            float dt = clock.restart().asSeconds();
+            // cue.setPower(window, &cueBall);
+            cueBall.Update(dt, &ball);
+            ball.Update(dt, &cueBall);
+            // test(&window);
+            drawGame(&window, &ball, &cueBall, &table, &score);
+        }
     }
-
     return 0;
 }
 
-void test(RenderWindow* window) {
+void test(RenderWindow *window)
+{
     window->clear();
 
     Vector2f p1 = Vector2f(CLASSIC_WIDTH * 0.2, 0);

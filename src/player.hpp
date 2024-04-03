@@ -46,7 +46,6 @@ public:
         setPosition(-3, -19);
         setScale(0.17f, 0.17f);
         updateScore(); // Update the score initially
-        std::cout << "Font size: " << getCharacterSize() << "\n";
     }
 
     void updateScore() {
