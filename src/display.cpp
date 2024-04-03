@@ -50,7 +50,7 @@ void drawGame(RenderWindow* window, std::vector<Ball> balls, Cue* cue,  CueBall*
     }
 
     // Draw the cue
-    cue->Draw(window, *cueBall);
+    cue->Draw(window, *cueBall, balls);
 
     window->display();
 }

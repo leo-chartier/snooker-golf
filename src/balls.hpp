@@ -35,7 +35,8 @@ class Ball : public CircleShape {
 
     
     void setInactive() {
-    isActive = false;
+        isActive = false;
+        Velocity = Vector2f(0, 0);
     }
 
     bool IsActive() const {
@@ -43,7 +44,7 @@ class Ball : public CircleShape {
     }
 
 
-    void Update(int checkedBalls, float dt, std::vector<Ball>& balls) {
+    void Update(float dt, std::vector<Ball>& balls) {
         Vector2f newPosition = Position;
         Vector2f forceFriction = BALL_FRICTION_COEFFICIENT * BALL_WEIGHT * ACCELERATION_DUE_TO_GRAVITY * normalize(Velocity);
         Vector2f forceAdditional = Vector2f(); // None for now
