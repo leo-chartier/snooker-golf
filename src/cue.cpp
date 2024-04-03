@@ -49,6 +49,9 @@ void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
 }
 
 void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall) {
+    if (cueBall->Velocity.x != 0 || cueBall->Velocity.y != 0) {
+        return;
+    }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         if (!startSet){
             start = sf::Mouse::getPosition(window);

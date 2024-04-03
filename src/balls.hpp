@@ -123,6 +123,15 @@ class CueBall : public Ball {
     void Hit(Vector2f direction) {
         Velocity = direction * 1000.f;
     }
+
+    void replace(){
+        if (!isActive){
+            isActive = true;
+            Position = Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2);
+            Velocity = Vector2f(0, 0);
+            setPosition(Position);
+        }
+    }
 };
 
 #endif

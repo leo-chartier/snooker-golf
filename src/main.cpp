@@ -129,6 +129,7 @@ int main()
                 ballsList[i].Update(i, dt, ballsList);
             }
         }
+        cueBall.replace();
 
 
         // test(&window);
