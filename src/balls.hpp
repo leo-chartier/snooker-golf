@@ -72,44 +72,21 @@ class Ball : public CircleShape {
             Velocity.y = -Velocity.y;
         }
 
-        // Check for collisions with the other balls
-        for (int i = checkedBalls; i < balls.size(); i++) {
-            if (&balls[i] == this) continue; // Skip self
-            if (!balls[i].IsActive()) continue; // Skip inactive balls
-            if (dotProduct(balls[i].Velocity, balls[checkedBalls].Velocity) > 0.f) continue; // Skip if the balls are moving away from each other
-
-            Vector2f projection = project(balls[i].Position, Position, newPosition);
-            float distanceToProjection = vectorLength(balls[i].Position - projection);
-            if (distanceToProjection < 2 * BALL_RADIUS) {
-                // Calculate the position at which the collision takes place
-                Vector2f direction = normalize(newPosition - Position);
-                float diameter2 = 4 * BALL_RADIUS * BALL_RADIUS;
-                float offsetFromProjection = sqrt(diameter2 - distanceToProjection * distanceToProjection);
-                Vector2f hit = projection - direction * offsetFromProjection;
-
-                // Calculate the new velocities for both balls
-                Vector2f relativePosition = balls[i].Position - hit;
-                Vector2f relativeVelocity = balls[i].Velocity - Velocity;
-                float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
-                float factor = dotProduct / diameter2;
-                Vector2f v1 = Velocity + factor * relativePosition;
-                Vector2f v2 = balls[i].Velocity + factor * relativePosition;
-                if (vectorLength(v1) > MAX_VELOCITY){
-                    v1 = normalize(v1) * MAX_VELOCITY;
+        // Collision with other balls
+        for (auto& ball : balls) {
+            if (&ball != this && ball.IsActive()) {
+                float distance = vectorLength(newPosition - ball.Position);
+                if (distance <= 2 * BALL_RADIUS) {
+                    Vector2f normal = normalize(newPosition - ball.Position);
+                    Vector2f relativeVelocity = Velocity - ball.Velocity;
+                    float impulse = (2.f * BALL_WEIGHT * dotProduct(relativeVelocity, normal)) / (2 * BALL_WEIGHT);
+                    Velocity -= impulse * normal;
+                    ball.Velocity += impulse * normal;
+                    newPosition += (2 * BALL_RADIUS - distance) * normal;
                 }
-                if (vectorLength(v2) > MAX_VELOCITY){
-                    v2 = normalize(v2) * MAX_VELOCITY;
-                }
-
-                // Update the positions
-                float remainingFactor = vectorLength(newPosition - Position) / vectorLength(newPosition - hit);
-                newPosition = hit + v1 * dt * remainingFactor;
-                balls[i].Position += v2 * dt * remainingFactor;
-                balls[i].setPosition(balls[i].Position);
-                Velocity = v1/2.F;
-                balls[i].Velocity = v2/2.F;
             }
         }
+        
 
         Position = newPosition;
         setPosition(Position);
