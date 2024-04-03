@@ -52,6 +52,32 @@ int main()
         return 1;
     }
 
+    // Create main menu background image
+    Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("assets/menu-background.jpg"))
+    {
+        std::cerr << "Error loading main menu background file" << std::endl;
+        return 1;
+    }
+
+    Sprite background(backgroundTexture);
+    background.setOrigin(background.getLocalBounds().width/20, background.getLocalBounds().height / 4);
+
+        // Get the size of the window and the texture
+    sf::Vector2u windowSize = window.getSize();
+    sf::Vector2u textureSize = backgroundTexture.getSize();
+
+    // Calculate scale factors
+    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
+    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
+
+    cout << "Scale X: " << scaleX << endl;
+    cout << "Scale Y: " << scaleY << endl;
+
+    // Set the scale of the background sprite
+    // background.setScale(scaleX/10, scaleY/10);
+    background.setScale(0.075, 0.075);
+
     // Create menu options
     Text option1;
     Text option2;
@@ -76,14 +102,14 @@ int main()
     option3.setScale(0.1f, 0.1f);
 
     // Set positions for menu options
-    option1.setPosition(20, 10);
-    option2.setPosition(20, 20);
-    option3.setPosition(20, 30);
+    option1.setPosition(20, 6);
+    option2.setPosition(20, 16);
+    option3.setPosition(20, 26);
 
     // Set colors for menu options
-    option1.setFillColor(Color::Red);
-    option2.setFillColor(Color::Red);
-    option3.setFillColor(Color::Red);
+    option1.setFillColor(Color::White);
+    option2.setFillColor(Color::White);
+    option3.setFillColor(Color::White);
 
     // Scene choosing
     // By default, we start the game on the main menu to choose the game we are going to play
@@ -123,6 +149,7 @@ int main()
         if (currentScene == Scene::MainMenu)
         {
             window.clear();
+            window.draw(background);
             window.draw(option1);
             window.draw(option2);
             window.draw(option3);
