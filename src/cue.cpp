@@ -17,9 +17,14 @@ Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle)
     this->startSet = false;
 }
 
-void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
+void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ballsList) {
     if (cueBall.Velocity.x != 0 || cueBall.Velocity.y != 0) {
         return;
+    }
+    for (int i = 0; i < ballsList.size(); i++) {
+        if (ballsList[i].Velocity.x != 0 || ballsList[i].Velocity.y != 0) {
+            return;
+        }
     }
     if (!check){
         position = cueBall.Position;
@@ -48,7 +53,15 @@ void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall) {
     window->draw(cueR);
 }
 
-void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall) {
+void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall, std::vector<Ball> &ballsList) {
+    if (cueBall->Velocity.x != 0 || cueBall->Velocity.y != 0) {
+        return;
+    }
+    for (int i = 0; i < ballsList.size(); i++) {
+        if (ballsList[i].Velocity.x != 0 || ballsList[i].Velocity.y != 0) {
+            return;
+        }
+    }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         if (!startSet){
             start = sf::Mouse::getPosition(window);

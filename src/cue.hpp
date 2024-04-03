@@ -16,8 +16,8 @@ class Cue {
         bool startSet;
 
         Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle);
-        void Draw(sf::RenderWindow* window, CueBall &cueBall);
-        void setPower(sf::RenderWindow &window, CueBall *cueBall);
+        void Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ballsList);
+        void setPower(sf::RenderWindow &window, CueBall *cueBall, std::vector<Ball> &ballsList);
 };
 
 #endif
