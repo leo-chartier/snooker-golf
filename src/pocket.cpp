@@ -32,13 +32,10 @@ float Pocket::getRadius() {
 // Check if ball is in pocket
 bool Pocket::isBallInPocket(const Ball& ball) {
 
-    // Get the ball's position
-    sf::Vector2f ballPosition = ball.getPosition();
-
-    // Get its radius
-    float ballRadius = ball.getRadius();
-
     // Euclidian distance formula
-    float distance = std::sqrt(std::pow(pocketPosition.x - ballPosition.x, 2) + std::pow(pocketPosition.y - ballPosition.y, 2));
-    return distance <= (pocketRadius - ballRadius);
+    float distance = std::sqrt(std::pow(pocketPosition.x + pocketRadius/2 - ball.Position.x + BALL_RADIUS/2, 2) + std::pow(pocketPosition.y + pocketRadius/2 - ball.Position.y + BALL_RADIUS/2, 2));
+    if (distance < pocketRadius/2 + BALL_RADIUS/2) {
+        return true;
+    }
+    return false;
 }

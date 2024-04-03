@@ -46,13 +46,11 @@ int main()
     }
 
     // Set the position of the balls
-
     for (int i = 0; i < 5; i++){
         for (int j = 0; j <= i; j++){
             double x = CLASSIC_WIDTH * 3 / 4 + i * BALL_RADIUS*2 * cos(M_PI/6);
             double y = CLASSIC_HEIGHT / 2 + j * BALL_RADIUS*2 * sin(M_PI/6);
             ballsList[i * (i + 1) / 2 + j].Position = Vector2f(x, y);
-            std::cout << "Ball " << i * (i + 1) / 2 + j << " at " << x << ", " << y << "\n";
         } 
     }
 
