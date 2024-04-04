@@ -2,6 +2,7 @@
 
 #include "measurements.hpp"
 #include "table.hpp"
+#include "player.cpp"
 #include "cue.hpp"
 #include "pocket.hpp"
 #include "balls.hpp"
@@ -55,13 +56,13 @@ void initializeWindowPosition(RenderWindow* window, Table table) {
     window->setView(view);
 }
 
-void drawGame(RenderWindow* window, std::vector<Ball> balls, Cue* cue,  CueBall* cueBall, Table* table, std::vector<Pocket> pocketList, size_t pocketCount) {
+void drawGame(RenderWindow* window, std::vector<Ball> balls, Cue* cue,  CueBall* cueBall, Table* table, std::vector<Pocket> pocketList, ScoreBoard* score) {
     window->clear();
 
     table->Draw(window);
 
     // Draw the pockets
-    for (size_t i = 0; i < pocketCount; i++){
+    for (size_t i = 0; i < pocketList.size(); i++){
         pocketList[i].Draw(window);
     }
 
@@ -80,6 +81,8 @@ void drawGame(RenderWindow* window, std::vector<Ball> balls, Cue* cue,  CueBall*
 
     // Draw the cue
     cue->Draw(window, *cueBall, balls);
+
+    window->draw(*score);
 
     window->display();
 }
