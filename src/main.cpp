@@ -121,7 +121,7 @@ int main()
 
 
         // test(&window);
-        drawGame(&window, ballsList, &cue,  &cueBall, &table, pocketList, 6); // The number after pocketlist represents the number of pockets to draw
+        drawGame(&window, ballsList, &cue,  &cueBall, &table, pocketList); // The number after pocketlist represents the number of pockets to draw
     }
 
     return 0;
