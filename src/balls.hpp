@@ -56,12 +56,16 @@ class Ball : public CircleShape {
         // Collision with the rails
         if (Velocity.x != 0 || Velocity.y != 0) {
             Vector2f intersection;
+            Vector2f direction = normalize(Velocity);
+            Vector2f extendedNewPos = newPosition + BALL_RADIUS * direction;
             for (size_t i = 0; i < nPoints; i++) {
                 Vector2f p1 = tablePoints[i];
                 Vector2f p2 = tablePoints[(i + 1) % nPoints];
-                if (intersects(p1, p2, Position, newPosition, intersection)) {
-                    Vector2f direction = normalize(p2 - p1);
-                    Vector2f normal = Vector2f(-direction.y, direction.x); // Rotate 90° counterclockwise to face outside
+                if (intersects(p1, p2, Position, extendedNewPos, intersection)) {
+                    intersection -= BALL_RADIUS * direction; // TODO: Scale BALL_RADIUS to be the projection on the norm, not the direction directly
+                    Vector2f segment = normalize(p2 - p1);
+                    Vector2f normal = Vector2f(-segment.y, segment.x); // Rotate 90° counterclockwise to face outside
+                    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
                     Velocity -= 2 * dotProduct(Velocity, normal) * normal;
                     float removedDistance = vectorLength(newPosition - intersection);
                     newPosition = intersection + removedDistance * normalize(Velocity);
