@@ -5,6 +5,9 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include "table.cpp"
+#include "cue.cpp"
+#include "pocket.cpp"
+#include <time.h>
 
 using namespace std;
 using namespace sf;
@@ -17,31 +20,75 @@ enum class Scene
 
 int main()
 {
-    // Initialize the window for pool scene
+    // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
-    initializeWindowPosition(&window);
+    window.setPosition(Vector2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2));
 
-    Vector2f shape[] = {
-        Vector2f(),
-        Vector2f(CLASSIC_WIDTH, 0),
-        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
-        Vector2f(0, CLASSIC_HEIGHT),
+    Vector2f vertices[] = {
+        Vector2f(  0,    144),
+        Vector2f(192,    144),
+        Vector2f(192,     88.58),
+        Vector2f(182.06,  81.94),
+        Vector2f(171.65,  66.37),
+        Vector2f(168,     48),
+        Vector2f(171.65,  29.63),
+        Vector2f(182.06,  14.06),
+        Vector2f(197.63,   3.65),
+        Vector2f(216,      0),
+        Vector2f(234.37,   3.65),
+        Vector2f(249.94,  14.06),
+        Vector2f(260.35,  29.63),
+        Vector2f(264,     48),
+        Vector2f(260.35,  66.37),
+        Vector2f(249.94,  81.94),
+        Vector2f(240,     88.58),
+        Vector2f(240,    144),
+        Vector2f(264,    144),
+        Vector2f(291.55, 149.48),
+        Vector2f(314.91, 165.09),
+        Vector2f(330.52, 188.45),
+        Vector2f(336,    216),
+        Vector2f(330.52, 243.56),
+        Vector2f(314.91, 266.91),
+        Vector2f(291.55, 282.52),
+        Vector2f(264,    288),
+        Vector2f(236.44, 282.52),
+        Vector2f(213.09, 266.91),
+        Vector2f(197.48, 243.56),
+        Vector2f(192,    216),
+        Vector2f(192,    192),
+        Vector2f(  0,    192),
     };
-    Table table = Table(shape, 4);
+    size_t nVertices = sizeof(vertices) / sizeof(Vector2f);
+    Table table = Table(vertices, nVertices);
+    initializeWindowPosition(&window, table);
 
-    CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
-    Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
+    // The list of pockets
+    std::vector<Pocket> pocketList = {
+        Pocket(Vector2f(216, 48), 2), // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
+    };
+
+    CueBall cueBall = CueBall(Vector2f(24, 168), BALL_RADIUS, CUE_BALL_COLOR);
+
+    double x0 = cueBall.Position.x + 48.0;
+    double y0 = cueBall.Position.y;
+    vector<Ball> ballsList;
+    for (int i = 0; i < 5; i++){
+        for (int j = 0; j <= i; j++){
+            double x = x0 + i * BALL_RADIUS * sqrt(3);
+            double y = y0 + (j * 2 - i) * BALL_RADIUS;
+            Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
+            ballsList.push_back(ball);
+        }
+    }
+
+    Cue cue = Cue(cueBall.Position, Vector2f(0,0), 0, 0);
 
     Player player = Player(0, 0);
     ScoreBoard score = ScoreBoard(player);
 
     sf::Clock clock;
-
-    // TEMP
-    // This has to be fixed as it launches the ball before seing the scene
-    cueBall.Velocity.x = 150.0f;
 
     // Main menu scene objects initialization
     // Create font
@@ -71,7 +118,8 @@ int main()
     float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
     float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-    background.setScale(0.075, 0.075);
+    background.setOrigin(-20, 0);
+    background.setScale(0.25, 0.25);
 
     // Create menu options
     Text option1;
@@ -88,18 +136,18 @@ int main()
     option3.setString("Exit");
 
     // Set character size for menu options
-    option1.setCharacterSize(45);
-    option2.setCharacterSize(45);
-    option3.setCharacterSize(45);
+    option1.setCharacterSize(450);
+    option2.setCharacterSize(450);
+    option3.setCharacterSize(450);
 
-    option1.setScale(0.1f, 0.1f);
-    option2.setScale(0.1f, 0.1f);
-    option3.setScale(0.1f, 0.1f);
+    option1.setScale(0.07f, 0.07f);
+    option2.setScale(0.07f, 0.07f);
+    option3.setScale(0.07f, 0.07f);
 
     // Set positions for menu options
-    option1.setPosition(20, 6);
-    option2.setPosition(20, 16);
-    option3.setPosition(20, 26);
+    option1.setPosition(20, 30);
+    option2.setPosition(20, 100);
+    option3.setPosition(20, 170);
 
     // Set colors for menu options
     option1.setFillColor(Color::White);
@@ -152,73 +200,38 @@ int main()
         }
         else if (currentScene == Scene::PoolScene)
         {
-            // Processing here
-            float dt = clock.restart().asSeconds();
-            // cue.setPower(window, &cueBall);
-            cueBall.Update(dt, &ball);
-            ball.Update(dt, &cueBall);
-            // test(&window);
-            drawGame(&window, &ball, &cueBall, &table, &score);
+        float dt = clock.restart().asSeconds();
+        // Check collision with each hole
+        cue.setPower(window, &cueBall, ballsList);
+        for (int i = 0; i < ballsList.size(); i++) {
+            for (auto& pocket : pocketList) {
+
+            // Check if ball came in contact with any of the pockets
+                if (pocket.isBallInPocket(ballsList[i])) {
+                    // std::cout << "The ball has fallen!" << "\n";
+                    ballsList[i].setInactive();
+                }
+
+                // Check if cue ball (...)
+                if (pocket.isBallInPocket(cueBall)) {
+                    // std::cout << "The cue ball has fallen!" << "\n";
+                    cueBall.setInactive();
+                }
+            }
+
+            if (cueBall.IsActive()) {
+                cueBall.Update(dt, ballsList);
+            }
+
+            if (ballsList[i].IsActive()) {
+                ballsList[i].Update(dt, ballsList);
+            }
         }
-    }
+        cueBall.replace();
+
+
+        // test(&window);
+        drawGame(&window, ballsList, &cue,  &cueBall, &table, pocketList, &score); // The number after pocketlist represents the number of pockets to draw
+    }}
     return 0;
-}
-
-void test(RenderWindow *window)
-{
-    window->clear();
-
-    Vector2f p1 = Vector2f(CLASSIC_WIDTH * 0.2, 0);
-    Vector2f p2 = Vector2f(CLASSIC_WIDTH * 0.8, CLASSIC_HEIGHT * 0.5);
-    Vector2f p3 = Vector2f(CLASSIC_WIDTH * 0.6, CLASSIC_HEIGHT * 0.7);
-    Vector2f v1 = normalize(p2 - p1) * 10.0f;
-    Vector2f v2 = Vector2f(0, 0);
-    float r = 10;
-    Vector2 offset(r, r);
-
-    Vector2f projection = project(p3, p1, p2);
-    float distance = vectorLength(p3 - projection);
-    Vector2f direction = normalize(p2 - p1);
-    float distanceToProjection = sqrt(4 * r * r - distance * distance);
-    Vector2f hit = projection - direction * distanceToProjection;
-    Vector2f relativePosition = p3 - hit;
-    Vector2f relativeVelocity = v2 - v1;
-    float dotProduct = relativeVelocity.x * relativePosition.x + relativeVelocity.y * relativePosition.y;
-    float factor = dotProduct / (distance * distance);
-    Vector2f v1_ = v1 + factor * relativePosition;
-    Vector2f v2_ = v2 - factor * relativePosition;
-    float remainingFactor = vectorLength(p2 - p1) / vectorLength(p2 - hit);
-    Vector2f p2_ = hit + v1_ * remainingFactor;
-    Vector2f p3_ = p3 + v2_ * remainingFactor;
-
-    CircleShape end_(r);
-    end_.setPosition(p2_ - offset);
-    end_.setFillColor(Color::Cyan);
-    window->draw(end_);
-    CircleShape other_(r);
-    other_.setPosition(p3_ - offset);
-    other_.setFillColor(Color::Magenta);
-    window->draw(other_);
-    CircleShape start(r);
-    start.setPosition(p1 - offset);
-    start.setFillColor(Color::White);
-    window->draw(start);
-    CircleShape end(r);
-    end.setPosition(p2 - offset);
-    end.setFillColor(Color::White);
-    window->draw(end);
-    CircleShape other(r);
-    other.setPosition(p3 - offset);
-    other.setFillColor(Color::Red);
-    window->draw(other);
-    CircleShape hitBall(r);
-    hitBall.setPosition(hit - offset);
-    hitBall.setFillColor(Color::Blue);
-    window->draw(hitBall);
-
-    drawLine(window, p1, p2, Color::Green);
-    // drawLine(window, p3, projection, Color::White);
-    drawLine(window, hit, hit + v1_, Color::White);
-    drawLine(window, p3, p3 + v2_, Color::White);
-    window->display();
 }

@@ -25,4 +25,6 @@ const float CUE_LENGTH = 40.0f; // in inches
 const float CUE_TIP_WIDTH = 0.5; // in inches (=14 mm)
 const float CUE_BALL_RESTITUTION_COEFFICIENT = 0.8;
 
+const float MIN_HEADER_RATIO = 0.2; // The header is at least X% of the height
+
 #endif
