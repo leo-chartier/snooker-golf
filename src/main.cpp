@@ -6,6 +6,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "table.cpp"
+#include "cue.cpp"
+#include "pocket.cpp"
+#include <time.h>
 
 using namespace std;
 using namespace sf;
@@ -18,31 +21,77 @@ enum class Scene
 
 int main()
 {
-    // Initialize the window for pool scene
+    // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
-    initializeWindowPosition(&window);
 
-    Vector2f shape[] = {
-        Vector2f(),
-        Vector2f(CLASSIC_WIDTH, 0),
-        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
-        Vector2f(0, CLASSIC_HEIGHT),
+    Vector2f vertices[] = {
+        Vector2f(0, 144),
+        Vector2f(192, 144),
+        Vector2f(192, 88.58),
+        Vector2f(182.06, 81.94),
+        Vector2f(171.65, 66.37),
+        Vector2f(168, 48),
+        Vector2f(171.65, 29.63),
+        Vector2f(182.06, 14.06),
+        Vector2f(197.63, 3.65),
+        Vector2f(216, 0),
+        Vector2f(234.37, 3.65),
+        Vector2f(249.94, 14.06),
+        Vector2f(260.35, 29.63),
+        Vector2f(264, 48),
+        Vector2f(260.35, 66.37),
+        Vector2f(249.94, 81.94),
+        Vector2f(240, 88.58),
+        Vector2f(240, 144),
+        Vector2f(264, 144),
+        Vector2f(291.55, 149.48),
+        Vector2f(314.91, 165.09),
+        Vector2f(330.52, 188.45),
+        Vector2f(336, 216),
+        Vector2f(330.52, 243.56),
+        Vector2f(314.91, 266.91),
+        Vector2f(291.55, 282.52),
+        Vector2f(264, 288),
+        Vector2f(236.44, 282.52),
+        Vector2f(213.09, 266.91),
+        Vector2f(197.48, 243.56),
+        Vector2f(192, 216),
+        Vector2f(192, 192),
+        Vector2f(0, 192),
     };
-    Table table = Table(shape, 4);
+    size_t nVertices = sizeof(vertices) / sizeof(Vector2f);
+    Table table = Table(vertices, nVertices);
+    initializeWindowPosition(&window, table);
 
-    CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
-    Ball ball = Ball(Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT * 0.51), BALL_RADIUS, BALL_COLOR);
+    // The list of pockets
+    std::vector<Pocket> pocketList = {
+        Pocket(Vector2f(216, 48), 2), // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
+    };
+
+    CueBall cueBall = CueBall(Vector2f(24, 168), BALL_RADIUS, CUE_BALL_COLOR);
+
+    double x0 = cueBall.Position.x + 48.0;
+    double y0 = cueBall.Position.y;
+    vector<Ball> ballsList;
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j <= i; j++)
+        {
+            double x = x0 + i * BALL_RADIUS * sqrt(3);
+            double y = y0 + (j * 2 - i) * BALL_RADIUS;
+            Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
+            ballsList.push_back(ball);
+        }
+    }
+
+    Cue cue = Cue(cueBall.Position, Vector2f(0, 0), 0, 0);
 
     Player player = Player(0, 0);
     ScoreBoard score = ScoreBoard(player);
 
     sf::Clock clock;
-
-    // TEMP
-    // This has to be fixed as it launches the ball before seing the scene
-    cueBall.Velocity.x = 150.0f;
 
     // Music
     sf::Music backgroundMusic;
@@ -91,9 +140,9 @@ int main()
     }
 
     Sprite background(backgroundTexture);
-    background.setOrigin(background.getLocalBounds().width/20, background.getLocalBounds().height / 4);
+    background.setOrigin(background.getLocalBounds().width / 20, background.getLocalBounds().height / 4);
 
-        // Get the size of the window and the texture
+    // Get the size of the window and the texture
     sf::Vector2u windowSize = window.getSize();
     sf::Vector2u textureSize = backgroundTexture.getSize();
 
@@ -101,7 +150,8 @@ int main()
     float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
     float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-    background.setScale(0.075, 0.075);
+    background.setPosition(-100, 25);
+    background.setScale(0.35, 0.35);
 
     // Create menu options
     Text option1;
@@ -114,22 +164,19 @@ int main()
     option3.setFont(font);
 
     option1.setString("Play Pool");
-    option2.setString("Scene 2");
+    option2.setString("Play together");
     option3.setString("Exit");
 
     // Set character size for menu options
-    option1.setCharacterSize(45);
-    option2.setCharacterSize(45);
-    option3.setCharacterSize(45);
+    option1.setCharacterSize(37);
+    option2.setCharacterSize(37);
+    option3.setCharacterSize(37);
 
-    option1.setScale(0.1f, 0.1f);
-    option2.setScale(0.1f, 0.1f);
-    option3.setScale(0.1f, 0.1f);
 
     // Set positions for menu options
-    option1.setPosition(20, 6);
-    option2.setPosition(20, 16);
-    option3.setPosition(20, 26);
+    option1.setPosition(20, 30);
+    option2.setPosition(20, 100);
+    option3.setPosition(20, 170);
 
     // Set colors for menu options
     option1.setFillColor(Color::White);
@@ -188,11 +235,42 @@ int main()
 
             // Processing here
             float dt = clock.restart().asSeconds();
-            // cue.setPower(window, &cueBall);
-            cueBall.Update(dt, &ball);
-            ball.Update(dt, &cueBall);
+            // Check collision with each hole
+            cue.setPower(window, &cueBall, ballsList);
+            for (int i = 0; i < ballsList.size(); i++)
+            {
+                for (auto &pocket : pocketList)
+                {
+
+                    // Check if ball came in contact with any of the pockets
+                    if (pocket.isBallInPocket(ballsList[i]))
+                    {
+                        // std::cout << "The ball has fallen!" << "\n";
+                        ballsList[i].setInactive();
+                    }
+
+                    // Check if cue ball (...)
+                    if (pocket.isBallInPocket(cueBall))
+                    {
+                        // std::cout << "The cue ball has fallen!" << "\n";
+                        cueBall.setInactive();
+                    }
+                }
+
+                if (cueBall.IsActive())
+                {
+                    cueBall.Update(dt, ballsList);
+                }
+
+                if (ballsList[i].IsActive())
+                {
+                    ballsList[i].Update(dt, ballsList);
+                }
+            }
+            cueBall.replace();
+
             // test(&window);
-            drawGame(&window, &ball, &cueBall, &table, &score);
+            drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score); // The number after pocketlist represents the number of pockets to draw
         }
     }
     return 0;

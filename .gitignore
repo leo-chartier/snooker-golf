@@ -36,4 +36,7 @@ src/*
 *.exe
 *.out
 *.app
+
+src/prog.dSYM/Contents/Info.plist
 src/prog.dSYM/Contents/Resources/DWARF/prog
+src/prog.dSYM/Contents/Resources/Relocations/aarch64/prog.yml
