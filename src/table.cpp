@@ -75,14 +75,13 @@ void triangulate(const std::vector<Vector2f>& polygon, ConvexShape* triangles) {
     }
 }
 
-Table::Table(Vector2f pointsArray[], size_t length) {
-    if (length < 3 || length > 64) perror("Must have between 3 and 64 vertices");
-    this->nPoints = length;
-    this->points = pointsArray;
-    this->nTriangles = length - 2;
+Table::Table(std::vector<Vector2f> points) {
+    if (points.size() < 3 || points.size() > 64) perror("Must have between 3 and 64 vertices");
+    this->nPoints = points.size();
+    this->points = points;
+    this->nTriangles = nPoints - 2;
     this->triangles = new ConvexShape[nTriangles];
 
-    std::vector<Vector2f> points(pointsArray, pointsArray + length);
     for (size_t i = 0; i < nTriangles; i++) {
         ConvexShape triangle(3);
         triangle.setFillColor(CLOTH_COLOR);

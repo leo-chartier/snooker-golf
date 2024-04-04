@@ -42,7 +42,7 @@ class Ball : public CircleShape {
         return isActive;
     }
 
-    void Update(float dt, std::vector<Ball>& balls, Vector2f tablePoints[], size_t nPoints) {
+    void Update(float dt, std::vector<Ball>& balls, std::vector<Vector2f> tablePoints) {
         Vector2f newPosition = Position;
         Vector2f forceFriction = BALL_FRICTION_COEFFICIENT * BALL_WEIGHT * ACCELERATION_DUE_TO_GRAVITY * normalize(Velocity);
         Vector2f forceAdditional = Vector2f(); // None for now
@@ -58,9 +58,9 @@ class Ball : public CircleShape {
             Vector2f intersection;
             Vector2f direction = normalize(Velocity);
             Vector2f extendedNewPos = newPosition + BALL_RADIUS * direction;
-            for (size_t i = 0; i < nPoints; i++) {
+            for (size_t i = 0; i < tablePoints.size(); i++) {
                 Vector2f p1 = tablePoints[i];
-                Vector2f p2 = tablePoints[(i + 1) % nPoints];
+                Vector2f p2 = tablePoints[(i + 1) % tablePoints.size()];
                 if (intersects(p1, p2, Position, extendedNewPos, intersection)) {
                     intersection -= BALL_RADIUS * direction; // TODO: Scale BALL_RADIUS to be the projection on the norm, not the direction directly
                     Vector2f segment = normalize(p2 - p1);
