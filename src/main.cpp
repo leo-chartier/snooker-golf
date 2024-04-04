@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "table.cpp"
 #include "cue.cpp"
 #include "pocket.cpp"
@@ -92,10 +93,39 @@ int main()
 
     sf::Clock clock;
 
+    // Music
+    sf::Music backgroundMusic;
+    if (!backgroundMusic.openFromFile("assets/sounds/tatum.ogg")) // Use your music file path here
+    {
+        return -1; // Error loading the file
+    }
+    
+    backgroundMusic.setLoop(true); // Make the music loop
+    backgroundMusic.play();
+
+    // Music
+    sf::Music ambienceCrowd;
+    if (!ambienceCrowd.openFromFile("assets/sounds/ambience.ogg")) // Use your music file path here
+    {
+        return -1; // Error loading the file
+    }
+    
+    ambienceCrowd.setLoop(true); // Make the music loop
+    ambienceCrowd.play();
+    ambienceCrowd.setVolume(40.0f);
+
+
     // Main menu scene objects initialization
     // Create font
     Font font;
     if (!font.loadFromFile("assets/arial.ttf")) // Change the path to your font file
+    {
+        std::cerr << "Error loading font file" << std::endl;
+        return 1;
+    }
+
+    Font font2;
+    if (!font.loadFromFile("assets/signalbq.otf")) // Change the path to your font file
     {
         std::cerr << "Error loading font file" << std::endl;
         return 1;
@@ -199,6 +229,11 @@ int main()
         }
         else if (currentScene == Scene::PoolScene)
         {
+            // Lower the music for more focus
+            backgroundMusic.setVolume(40.0f);
+            ambienceCrowd.setVolume(15.0f);
+
+            // Processing here
             float dt = clock.restart().asSeconds();
             // Check collision with each hole
             cue.setPower(window, &cueBall, ballsList);
