@@ -59,29 +59,22 @@ int main()
     initializeWindowPosition(&window, table);
 
     // The list of pockets
-    std::vector<Pocket> pocketList = {Pocket(Vector2f(0, 0), 2), // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
-                                    Pocket(Vector2f((CLASSIC_WIDTH / 2) - 2, 0), 2),
-                                    Pocket(Vector2f(CLASSIC_WIDTH - 4, 0), 2),
-                                    Pocket(Vector2f(0, CLASSIC_HEIGHT - 4), 2),
-                                    Pocket(Vector2f((CLASSIC_WIDTH / 2) -2, CLASSIC_HEIGHT - 4), 2),
-                                    Pocket(Vector2f(CLASSIC_WIDTH - 4, CLASSIC_HEIGHT -4), 2)
+    std::vector<Pocket> pocketList = {
+        Pocket(Vector2f(216, 48), 2), // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
     };
 
-    CueBall cueBall = CueBall(Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2), BALL_RADIUS, CUE_BALL_COLOR);
+    CueBall cueBall = CueBall(Vector2f(24, 168), BALL_RADIUS, CUE_BALL_COLOR);
 
+    double x0 = cueBall.Position.x + 48.0;
+    double y0 = cueBall.Position.y;
     vector<Ball> ballsList;
-    for (int i = 0; i < 15; i++) {
-        Ball ball = Ball(Vector2f(99, 99), BALL_RADIUS, BALL_COLOR);
-        ballsList.push_back(ball);
-    }
-
-    // Set the position of the balls
     for (int i = 0; i < 5; i++){
         for (int j = 0; j <= i; j++){
-            double x = CLASSIC_WIDTH * 3 / 4 + i * BALL_RADIUS*2 * cos(M_PI/6);
-            double y = CLASSIC_HEIGHT / 2 + j * BALL_RADIUS*2 * sin(M_PI/6);
-            ballsList[i * (i + 1) / 2 + j].Position = Vector2f(x, y);
-        } 
+            double x = x0 + i * BALL_RADIUS * sqrt(3);
+            double y = y0 + (j * 2 - i) * BALL_RADIUS;
+            Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
+            ballsList.push_back(ball);
+        }
     }
 
     Cue cue = Cue(cueBall.Position, Vector2f(0,0), 0, 0);
