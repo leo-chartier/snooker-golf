@@ -84,7 +84,7 @@ int main()
     option3.setFont(font);
 
     option1.setString("Play Pool");
-    option2.setString("Scene 2");
+    option2.setString("Play together");
     option3.setString("Exit");
 
     // Set character size for menu options

@@ -43,13 +43,13 @@ public:
         setFont(font);
         setCharacterSize(40);
         setFillColor(sf::Color::White);
-        setPosition(-3, -19);
-        setScale(0.17f, 0.17f);
+        setPosition(0, -15);
+        setScale(0.10f, 0.10f);
         updateScore(); // Update the score initially
     }
 
     void updateScore() {
-        setString("Score: " + std::to_string(player.getScore()));
+        setString("Your score: " + std::to_string(player.getScore()));
     }
 };
 
