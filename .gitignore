@@ -1,5 +1,6 @@
 src/*
 !src/*.*
+!src/assets
 .vscode
 **/.DS_Store
 
