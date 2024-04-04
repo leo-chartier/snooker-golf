@@ -23,42 +23,42 @@ int main()
     // Initialize the window
     RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.setPosition(Vector2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2));
+    window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
 
     Vector2f vertices[] = {
-        Vector2f(  0,    144),
-        Vector2f(192,    144),
-        Vector2f(192,     88.58),
-        Vector2f(182.06,  81.94),
-        Vector2f(171.65,  66.37),
-        Vector2f(168,     48),
-        Vector2f(171.65,  29.63),
-        Vector2f(182.06,  14.06),
-        Vector2f(197.63,   3.65),
-        Vector2f(216,      0),
-        Vector2f(234.37,   3.65),
-        Vector2f(249.94,  14.06),
-        Vector2f(260.35,  29.63),
-        Vector2f(264,     48),
-        Vector2f(260.35,  66.37),
-        Vector2f(249.94,  81.94),
-        Vector2f(240,     88.58),
-        Vector2f(240,    144),
-        Vector2f(264,    144),
+        Vector2f(0, 144),
+        Vector2f(192, 144),
+        Vector2f(192, 88.58),
+        Vector2f(182.06, 81.94),
+        Vector2f(171.65, 66.37),
+        Vector2f(168, 48),
+        Vector2f(171.65, 29.63),
+        Vector2f(182.06, 14.06),
+        Vector2f(197.63, 3.65),
+        Vector2f(216, 0),
+        Vector2f(234.37, 3.65),
+        Vector2f(249.94, 14.06),
+        Vector2f(260.35, 29.63),
+        Vector2f(264, 48),
+        Vector2f(260.35, 66.37),
+        Vector2f(249.94, 81.94),
+        Vector2f(240, 88.58),
+        Vector2f(240, 144),
+        Vector2f(264, 144),
         Vector2f(291.55, 149.48),
         Vector2f(314.91, 165.09),
         Vector2f(330.52, 188.45),
-        Vector2f(336,    216),
+        Vector2f(336, 216),
         Vector2f(330.52, 243.56),
         Vector2f(314.91, 266.91),
         Vector2f(291.55, 282.52),
-        Vector2f(264,    288),
+        Vector2f(264, 288),
         Vector2f(236.44, 282.52),
         Vector2f(213.09, 266.91),
         Vector2f(197.48, 243.56),
-        Vector2f(192,    216),
-        Vector2f(192,    192),
-        Vector2f(  0,    192),
+        Vector2f(192, 216),
+        Vector2f(192, 192),
+        Vector2f(0, 192),
     };
     size_t nVertices = sizeof(vertices) / sizeof(Vector2f);
     Table table = Table(vertices, nVertices);
@@ -74,8 +74,10 @@ int main()
     double x0 = cueBall.Position.x + 48.0;
     double y0 = cueBall.Position.y;
     vector<Ball> ballsList;
-    for (int i = 0; i < 5; i++){
-        for (int j = 0; j <= i; j++){
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j <= i; j++)
+        {
             double x = x0 + i * BALL_RADIUS * sqrt(3);
             double y = y0 + (j * 2 - i) * BALL_RADIUS;
             Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
@@ -83,7 +85,7 @@ int main()
         }
     }
 
-    Cue cue = Cue(cueBall.Position, Vector2f(0,0), 0, 0);
+    Cue cue = Cue(cueBall.Position, Vector2f(0, 0), 0, 0);
 
     Player player = Player(0, 0);
     ScoreBoard score = ScoreBoard(player);
@@ -108,9 +110,9 @@ int main()
     }
 
     Sprite background(backgroundTexture);
-    background.setOrigin(background.getLocalBounds().width/20, background.getLocalBounds().height / 4);
+    background.setOrigin(background.getLocalBounds().width / 20, background.getLocalBounds().height / 4);
 
-        // Get the size of the window and the texture
+    // Get the size of the window and the texture
     sf::Vector2u windowSize = window.getSize();
     sf::Vector2u textureSize = backgroundTexture.getSize();
 
@@ -118,8 +120,8 @@ int main()
     float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
     float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-    background.setOrigin(-20, 0);
-    background.setScale(0.25, 0.25);
+    background.setPosition(-100, 25);
+    background.setScale(0.35, 0.35);
 
     // Create menu options
     Text option1;
@@ -136,13 +138,10 @@ int main()
     option3.setString("Exit");
 
     // Set character size for menu options
-    option1.setCharacterSize(450);
-    option2.setCharacterSize(450);
-    option3.setCharacterSize(450);
+    option1.setCharacterSize(37);
+    option2.setCharacterSize(37);
+    option3.setCharacterSize(37);
 
-    option1.setScale(0.07f, 0.07f);
-    option2.setScale(0.07f, 0.07f);
-    option3.setScale(0.07f, 0.07f);
 
     // Set positions for menu options
     option1.setPosition(20, 30);
@@ -200,38 +199,44 @@ int main()
         }
         else if (currentScene == Scene::PoolScene)
         {
-        float dt = clock.restart().asSeconds();
-        // Check collision with each hole
-        cue.setPower(window, &cueBall, ballsList);
-        for (int i = 0; i < ballsList.size(); i++) {
-            for (auto& pocket : pocketList) {
+            float dt = clock.restart().asSeconds();
+            // Check collision with each hole
+            cue.setPower(window, &cueBall, ballsList);
+            for (int i = 0; i < ballsList.size(); i++)
+            {
+                for (auto &pocket : pocketList)
+                {
 
-            // Check if ball came in contact with any of the pockets
-                if (pocket.isBallInPocket(ballsList[i])) {
-                    // std::cout << "The ball has fallen!" << "\n";
-                    ballsList[i].setInactive();
+                    // Check if ball came in contact with any of the pockets
+                    if (pocket.isBallInPocket(ballsList[i]))
+                    {
+                        // std::cout << "The ball has fallen!" << "\n";
+                        ballsList[i].setInactive();
+                    }
+
+                    // Check if cue ball (...)
+                    if (pocket.isBallInPocket(cueBall))
+                    {
+                        // std::cout << "The cue ball has fallen!" << "\n";
+                        cueBall.setInactive();
+                    }
                 }
 
-                // Check if cue ball (...)
-                if (pocket.isBallInPocket(cueBall)) {
-                    // std::cout << "The cue ball has fallen!" << "\n";
-                    cueBall.setInactive();
+                if (cueBall.IsActive())
+                {
+                    cueBall.Update(dt, ballsList);
+                }
+
+                if (ballsList[i].IsActive())
+                {
+                    ballsList[i].Update(dt, ballsList);
                 }
             }
+            cueBall.replace();
 
-            if (cueBall.IsActive()) {
-                cueBall.Update(dt, ballsList);
-            }
-
-            if (ballsList[i].IsActive()) {
-                ballsList[i].Update(dt, ballsList);
-            }
+            // test(&window);
+            drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score); // The number after pocketlist represents the number of pockets to draw
         }
-        cueBall.replace();
-
-
-        // test(&window);
-        drawGame(&window, ballsList, &cue,  &cueBall, &table, pocketList, &score); // The number after pocketlist represents the number of pockets to draw
-    }}
+    }
     return 0;
 }

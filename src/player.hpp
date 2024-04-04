@@ -41,10 +41,9 @@ public:
             std::cout << "Font loading failed" << std::endl;
         }
         setFont(font);
-        setCharacterSize(40);
+        setCharacterSize(25);
         setFillColor(sf::Color::White);
         setPosition(0, -15);
-        setScale(0.10f, 0.10f);
         updateScore(); // Update the score initially
     }
 
