@@ -55,23 +55,24 @@ class Ball : public CircleShape {
             Velocity.x = Velocity.y = 0;
         newPosition += Velocity * dt;
 
-        // Collision with the rails
-        if (newPosition.x < BALL_RADIUS) {
-            newPosition.x = 2 * BALL_RADIUS - newPosition.x;
-            Velocity.x = -Velocity.x;
-        }
-        if (newPosition.x > CLASSIC_WIDTH - BALL_RADIUS) {
-            newPosition.x = 2 * (CLASSIC_WIDTH - BALL_RADIUS) - newPosition.x;
-            Velocity.x = -Velocity.x;
-        }
-        if (newPosition.y < BALL_RADIUS) {
-            newPosition.y = 2 * BALL_RADIUS - newPosition.y;
-            Velocity.y = -Velocity.y;
-        }
-        if (newPosition.y > CLASSIC_HEIGHT - BALL_RADIUS) {
-            newPosition.y = 2 * (CLASSIC_HEIGHT - BALL_RADIUS) - newPosition.y;
-            Velocity.y = -Velocity.y;
-        }
+        // // Collision with the rails
+        // TODO: Collision with new walls
+        // if (newPosition.x < BALL_RADIUS) {
+        //     newPosition.x = 2 * BALL_RADIUS - newPosition.x;
+        //     Velocity.x = -Velocity.x;
+        // }
+        // if (newPosition.x > CLASSIC_WIDTH - BALL_RADIUS) {
+        //     newPosition.x = 2 * (CLASSIC_WIDTH - BALL_RADIUS) - newPosition.x;
+        //     Velocity.x = -Velocity.x;
+        // }
+        // if (newPosition.y < BALL_RADIUS) {
+        //     newPosition.y = 2 * BALL_RADIUS - newPosition.y;
+        //     Velocity.y = -Velocity.y;
+        // }
+        // if (newPosition.y > CLASSIC_HEIGHT - BALL_RADIUS) {
+        //     newPosition.y = 2 * (CLASSIC_HEIGHT - BALL_RADIUS) - newPosition.y;
+        //     Velocity.y = -Velocity.y;
+        // }
 
         // Collision with other balls
         for (auto& ball : balls) {
