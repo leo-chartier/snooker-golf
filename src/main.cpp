@@ -110,11 +110,11 @@ int main()
             }
 
             if (cueBall.IsActive()) {
-                cueBall.Update(dt, ballsList);
+                cueBall.Update(dt, ballsList, vertices, nVertices);
             }
 
             if (ballsList[i].IsActive()) {
-                ballsList[i].Update(dt, ballsList);
+                ballsList[i].Update(dt, ballsList, vertices, nVertices);
             }
         }
         cueBall.replace();
