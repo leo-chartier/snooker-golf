@@ -33,20 +33,23 @@ int main() {
     initializeWindowPosition(&window, table);
 
     // The list of pockets
-    std::vector<Pocket> pocketList = {
-        Pocket(Vector2f(216, 48), 2),  // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
-    };
+    std::vector<Pocket> pocketList;
+    for (Vector2f position : map.pocketsPositions) {
+        pocketList.push_back(Pocket(position, POCKET_RADIUS));
+    }
 
     CueBall cueBall = CueBall(map.cueBallStart, BALL_RADIUS, CUE_BALL_COLOR);
 
-    double x0 = cueBall.Position.x + 48.0;
-    double y0 = cueBall.Position.y;
     vector<Ball> ballsList;
+    Vector2f u = normalize(map.ballsStart - map.cueBallStart);
+    Vector2f v = Vector2f(u.y, -u.x);
+    const float brsqrt3 = BALL_RADIUS * sqrt(3);
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j <= i; j++) {
-            double x = x0 + i * BALL_RADIUS * sqrt(3);
-            double y = y0 + (j * 2 - i) * BALL_RADIUS;
-            Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
+            Vector2f du = i * brsqrt3 * u;
+            Vector2f dv = (j * 2 - i) * BALL_RADIUS * v;
+            Vector2f position = map.ballsStart + du + dv;
+            Ball ball = Ball(position, BALL_RADIUS, BALL_COLOR);
             ballsList.push_back(ball);
         }
     }
@@ -208,7 +211,7 @@ int main() {
                     ballsList[i].Update(dt, ballsList, map.borderPoints);
                 }
             }
-            cueBall.replace();
+            cueBall.replace(map.cueBallStart);
 
             // test(&window);
             drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score);  // The number after pocketlist represents the number of pockets to draw

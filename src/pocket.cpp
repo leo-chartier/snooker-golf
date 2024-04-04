@@ -14,6 +14,7 @@ Pocket::~Pocket() {}
 // Draw function
 void Pocket::Draw(sf::RenderWindow* window) {
     sf::CircleShape circle(pocketRadius);
+    circle.setOrigin(Vector2f(POCKET_RADIUS, POCKET_RADIUS));
     circle.setPosition(pocketPosition);
     circle.setFillColor(sf::Color::Black);
     window->draw(circle);
@@ -31,11 +32,6 @@ float Pocket::getRadius() {
 
 // Check if ball is in pocket
 bool Pocket::isBallInPocket(const Ball& ball) {
-
-    // Euclidian distance formula
-    float distance = std::sqrt(std::pow(pocketPosition.x + pocketRadius/2 - ball.Position.x + BALL_RADIUS/2, 2) + std::pow(pocketPosition.y + pocketRadius/2 - ball.Position.y + BALL_RADIUS/2, 2));
-    if (distance < pocketRadius/2 + BALL_RADIUS/2) {
-        return true;
-    }
-    return false;
+    float distance = vectorLength(ball.Position - pocketPosition);
+    return distance <= pocketRadius + BALL_RADIUS;
 }

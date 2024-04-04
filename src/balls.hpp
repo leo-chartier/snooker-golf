@@ -102,10 +102,10 @@ class CueBall : public Ball {
         Velocity = direction * 1000.f;
     }
 
-    void replace(){
+    void replace(Vector2f spawnPosition){
         if (!isActive){
             isActive = true;
-            Position = Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2);
+            Position = spawnPosition;
             Velocity = Vector2f(0, 0);
             setPosition(Position);
         }
