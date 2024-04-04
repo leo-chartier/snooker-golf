@@ -36,3 +36,4 @@ src/*
 *.exe
 *.out
 *.app
+src/prog.dSYM/Contents/Resources/DWARF/prog
