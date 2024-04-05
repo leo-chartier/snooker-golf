@@ -60,6 +60,8 @@ int main() {
     Player player = Player(0, 0);
     ScoreBoard score = ScoreBoard(player);
 
+    int pocketedBalls = 0;
+
     sf::Clock clock;
 
     // Music
@@ -217,6 +219,17 @@ int main() {
                 }
             }
             cueBall.replace(map.cueBallStart);
+
+            for (int i = 0; i< ballsList.size(); i++) {
+                if (!ballsList[i].isActive) {
+                    pocketedBalls++;
+                }
+            }
+
+            player.setScore(pocketedBalls);
+            score.updateScore();
+
+            pocketedBalls = 0;
 
             // test(&window);
             drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score);  // The number after pocketlist represents the number of pockets to draw
