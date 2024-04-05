@@ -32,7 +32,6 @@ class Ball : public CircleShape {
         move(p);
         setFillColor(c);
     }
-
     
     void setInactive() {
         isActive = false;
@@ -43,8 +42,7 @@ class Ball : public CircleShape {
         return isActive;
     }
 
-
-    void Update(float dt, std::vector<Ball>& balls) {
+    void Update(float dt, std::vector<Ball>& balls, std::vector<Vector2f> tablePoints) {
         Vector2f newPosition = Position;
         Vector2f forceFriction = BALL_FRICTION_COEFFICIENT * BALL_WEIGHT * ACCELERATION_DUE_TO_GRAVITY * normalize(Velocity);
         Vector2f forceAdditional = Vector2f(); // None for now
@@ -56,21 +54,24 @@ class Ball : public CircleShape {
         newPosition += Velocity * dt;
 
         // Collision with the rails
-        if (newPosition.x < BALL_RADIUS) {
-            newPosition.x = 2 * BALL_RADIUS - newPosition.x;
-            Velocity.x = -Velocity.x;
-        }
-        if (newPosition.x > CLASSIC_WIDTH - BALL_RADIUS) {
-            newPosition.x = 2 * (CLASSIC_WIDTH - BALL_RADIUS) - newPosition.x;
-            Velocity.x = -Velocity.x;
-        }
-        if (newPosition.y < BALL_RADIUS) {
-            newPosition.y = 2 * BALL_RADIUS - newPosition.y;
-            Velocity.y = -Velocity.y;
-        }
-        if (newPosition.y > CLASSIC_HEIGHT - BALL_RADIUS) {
-            newPosition.y = 2 * (CLASSIC_HEIGHT - BALL_RADIUS) - newPosition.y;
-            Velocity.y = -Velocity.y;
+        if (Velocity.x != 0 || Velocity.y != 0) {
+            Vector2f intersection;
+            Vector2f direction = normalize(Velocity);
+            Vector2f extendedNewPos = newPosition + BALL_RADIUS * direction;
+            for (size_t i = 0; i < tablePoints.size(); i++) {
+                Vector2f p1 = tablePoints[i];
+                Vector2f p2 = tablePoints[(i + 1) % tablePoints.size()];
+                if (intersects(p1, p2, Position, extendedNewPos, intersection)) {
+                    intersection -= BALL_RADIUS * direction; // TODO: Scale BALL_RADIUS to be the projection on the norm, not the direction directly
+                    Vector2f segment = normalize(p2 - p1);
+                    Vector2f normal = Vector2f(-segment.y, segment.x); // Rotate 90° counterclockwise to face outside
+                    // https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+                    Velocity -= 2 * dotProduct(Velocity, normal) * normal;
+                    float removedDistance = vectorLength(newPosition - intersection);
+                    newPosition = intersection + removedDistance * normalize(Velocity);
+                    break;
+                };
+            }
         }
 
         // Collision with other balls
@@ -87,7 +88,21 @@ class Ball : public CircleShape {
                 }
             }
         }
-        
+
+        // Check for out of bounds
+        Vector2f pFar = newPosition + Vector2f(9999, 0);
+        int hitCount = 0;
+        Vector2f intersection;
+        for (size_t i = 0; i < tablePoints.size(); i++) {
+            Vector2f p1 = tablePoints[i];
+            Vector2f p2 = tablePoints[(i + 1) % tablePoints.size()];
+            if (intersects(p1, p2, newPosition, pFar, intersection)) {
+                hitCount++;
+            }
+        }
+        if (!(hitCount & 1)) {
+            isActive = false;
+        }
 
         Position = newPosition;
         setPosition(Position);
@@ -102,10 +117,10 @@ class CueBall : public Ball {
         Velocity = direction * 1000.f;
     }
 
-    void replace(){
+    void replace(Vector2f spawnPosition){
         if (!isActive){
             isActive = true;
-            Position = Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2);
+            Position = spawnPosition;
             Velocity = Vector2f(0, 0);
             setPosition(Position);
         }
