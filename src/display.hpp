@@ -7,8 +7,8 @@
 #include "table.hpp"
 #include <SFML/Graphics.hpp>
 
-const unsigned int SCREEN_W = 1200;
-const unsigned int SCREEN_H = 800;
+unsigned int SCREEN_W = 1200;
+unsigned int SCREEN_H = 800;
 #define TITLE "Snooker Golf"
 
 float windowScale = 1.0f;

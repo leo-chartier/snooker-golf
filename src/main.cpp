@@ -60,7 +60,9 @@ void reset(map_t map) {
 
 int main() {
     // Initialize the window
-    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
+    SCREEN_W = sf::VideoMode::getDesktopMode().width;
+    SCREEN_H = sf::VideoMode::getDesktopMode().height;
+    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close | Style::Fullscreen);
     VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
 
@@ -174,6 +176,17 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                currentScene = Scene::MainMenu;
+                window.setView(menuView);
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::F) {
+                cueBall->Velocity = Vector2f();
+                for (Ball ball : ballsList) {
+                    ball.Velocity = Vector2f();
+                }
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::R) {
+                cueBall->isActive = false;
+                cueBall->replace(map.cueBallStart);
             } else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 Vector2f mousePos = window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
                 if (currentScene == Scene::MainMenu) {
