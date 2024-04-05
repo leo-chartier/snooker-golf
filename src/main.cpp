@@ -32,7 +32,6 @@ int main() {
     map_t map = maps[mapIndex];
 
     Table table = Table(map.borderPoints);
-    initializeWindowPosition(&window, table);
 
     // The list of pockets
     std::vector<Pocket> pocketList;
@@ -108,18 +107,21 @@ int main() {
     }
 
     Sprite background(backgroundTexture);
-    background.setOrigin(background.getLocalBounds().width / 20, background.getLocalBounds().height / 4);
 
-    // Get the size of the window and the texture
-    sf::Vector2u windowSize = window.getSize();
+    // Calculate window size
     sf::Vector2u textureSize = backgroundTexture.getSize();
+    float menuWidth = textureSize.x;
+    float menuHeight = menuWidth * SCREEN_H / SCREEN_W;
+    if (menuHeight > textureSize.y) {
+        menuHeight = textureSize.y;
+        menuWidth = menuHeight * SCREEN_W / SCREEN_H;
+    }
 
-    // Calculate scale factors
-    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
-    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
-
-    background.setPosition(-100, 25);
-    background.setScale(0.35, 0.35);
+    View menuView = View(
+        Vector2f(menuWidth / 2, menuHeight / 2),
+        Vector2f(menuWidth, menuHeight)
+    );
+    window.setView(menuView);
 
     // Create menu options
     Text option1;
@@ -165,6 +167,7 @@ int main() {
                 if (currentScene == Scene::MainMenu) {
                     if (option1.getGlobalBounds().contains(mousePos)) {
                         currentScene = Scene::PoolScene;
+                        initializeWindowPosition(&window, table);
                     } else if (option2.getGlobalBounds().contains(mousePos)) {
                         cout << "Scene 2" << endl;
                     } else if (option3.getGlobalBounds().contains(mousePos)) {
