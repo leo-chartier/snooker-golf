@@ -14,7 +14,7 @@
 
 using namespace sf;
 
-float MIN_VELOCITY = 0.01f;
+float MIN_VELOCITY = 0.1f;
 float MAX_VELOCITY = 100.f;
 
 class Ball : public CircleShape {
