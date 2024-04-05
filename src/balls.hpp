@@ -89,6 +89,21 @@ class Ball : public CircleShape {
             }
         }
 
+        // Check for out of bounds
+        Vector2f pFar = newPosition + Vector2f(9999, 0);
+        int hitCount = 0;
+        Vector2f intersection;
+        for (size_t i = 0; i < tablePoints.size(); i++) {
+            Vector2f p1 = tablePoints[i];
+            Vector2f p2 = tablePoints[(i + 1) % tablePoints.size()];
+            if (intersects(p1, p2, newPosition, pFar, intersection)) {
+                hitCount++;
+            }
+        }
+        if (!(hitCount & 1)) {
+            isActive = false;
+        }
+
         Position = newPosition;
         setPosition(Position);
     }

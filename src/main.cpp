@@ -21,29 +21,27 @@ enum class Scene {
     PoolScene
 };
 
-int main() {
-    // Initialize the window
-    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
-    VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
+Table* table;
+std::vector<Pocket> pocketList;
+CueBall* cueBall;
+vector<Ball> ballsList;
+Cue* cue;
+Player player;
 
-    srand(time(NULL));
-    size_t mapIndex = rand() % NB_MAPS;
-    map_t map = maps[mapIndex];
-
-    Table table = Table(map.borderPoints);
+void reset(map_t map) {
+    table = new Table(map.borderPoints);
 
     // The list of pockets
-    std::vector<Pocket> pocketList;
+    pocketList.clear();
     for (Vector2f position : map.pocketsPositions) {
         pocketList.push_back(Pocket(position, POCKET_RADIUS));
     }
 
-    CueBall cueBall = CueBall(map.cueBallStart, BALL_RADIUS, CUE_BALL_COLOR);
+    cueBall = new CueBall(map.cueBallStart, BALL_RADIUS, CUE_BALL_COLOR);
 
-    vector<Ball> ballsList;
     Vector2f u = normalize(map.ballsStart - map.cueBallStart);
     Vector2f v = Vector2f(u.y, -u.x);
+    ballsList.clear();
     const float brsqrt3 = BALL_RADIUS * sqrt(3);
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j <= i; j++) {
@@ -55,10 +53,24 @@ int main() {
         }
     }
 
-    Cue cue = Cue(cueBall.Position, Vector2f(0, 0), 0, 0);
+    cue = new Cue(map.cueBallStart);
 
-    Player player = Player(0, 0);
+    player = Player(0, 0);
+}
+
+int main() {
+    // Initialize the window
+    RenderWindow window(VideoMode(SCREEN_W, SCREEN_H), TITLE, Style::Close);
+    VideoMode desktop = sf::VideoMode::getDesktopMode();
+    window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
+
+    srand(time(NULL));
+    size_t mapIndex = NB_MAPS;
+    map_t map;
+
     ScoreBoard score = ScoreBoard(player);
+
+    int pocketedBalls = 0;
 
     sf::Clock clock;
 
@@ -202,7 +214,13 @@ int main() {
                 if (currentScene == Scene::MainMenu) {
                     if (option1.getGlobalBounds().contains(mousePos)) {
                         currentScene = Scene::PoolScene;
-                        initializeWindowPosition(&window, table);
+                        size_t oldMap = mapIndex;
+                        do {
+                            mapIndex = rand() % NB_MAPS;
+                        } while (mapIndex == oldMap);
+                        map = maps[mapIndex];
+                        reset(map);
+                        initializeWindowPosition(&window, *table);
                     } else if (option2.getGlobalBounds().contains(mousePos)) {
                         cout << "Scene 2" << endl;
                     } else if (option3.getGlobalBounds().contains(mousePos)) {
@@ -227,7 +245,7 @@ int main() {
             // Processing here
             float dt = clock.restart().asSeconds();
             // Check collision with each hole
-            cue.setPower(window, &cueBall, ballsList);
+            cue->setPower(window, cueBall, ballsList);
             for (int i = 0; i < ballsList.size(); i++) {
                 for (auto &pocket : pocketList) {
                     // Check if ball came in contact with any of the pockets
@@ -239,24 +257,41 @@ int main() {
                     }
 
                     // Check if cue ball (...)
-                    if (pocket.isBallInPocket(cueBall)) {
+                    if (pocket.isBallInPocket(*cueBall)) {
                         // std::cout << "The cue ball has fallen!" << "\n";
-                        cueBall.setInactive();
+                        cueBall->setInactive();
                     }
                 }
 
-                if (cueBall.IsActive()) {
-                    cueBall.Update(dt, ballsList, map.borderPoints);
+                if (cueBall->IsActive()) {
+                    cueBall->Update(dt, ballsList, map.borderPoints);
                 }
 
                 if (ballsList[i].IsActive()) {
                     ballsList[i].Update(dt, ballsList, map.borderPoints);
                 }
             }
-            cueBall.replace(map.cueBallStart);
+            cueBall->replace(map.cueBallStart);
+
+            for (int i = 0; i< ballsList.size(); i++) {
+                if (!ballsList[i].isActive) {
+                    pocketedBalls++;
+                }
+            }
+
+            if (pocketedBalls == 15) {
+                currentScene = Scene::MainMenu;
+                window.setView(menuView);
+                continue;
+            }
+
+            player.setScore(pocketedBalls);
+            score.updateScore();
+
+            pocketedBalls = 0;
 
             // test(&window);
-            drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score);
+            drawGame(&window, ballsList, cue, cueBall, table, pocketList, &score);  // The number after pocketlist represents the number of pockets to draw
         }
     }
     return 0;
