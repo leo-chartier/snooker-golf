@@ -27,7 +27,9 @@ int main() {
     VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
 
-    map_t map = mapLoop;
+    srand(time(NULL));
+    size_t mapIndex = rand() % NB_MAPS;
+    map_t map = maps[mapIndex];
 
     Table table = Table(map.borderPoints);
     initializeWindowPosition(&window, table);
