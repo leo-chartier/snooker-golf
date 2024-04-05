@@ -244,6 +244,7 @@ int main() {
 
             if (pocketedBalls == 15) {
                 currentScene = Scene::MainMenu;
+                window.setView(menuView);
                 continue;
             }
 
