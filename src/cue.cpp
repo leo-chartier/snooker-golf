@@ -8,9 +8,22 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+// Load sound effects: cue hit
+sf::SoundBuffer cueHitBuffer;
+sf::Sound cueHitSound;
+
 Cue::Cue(Vector2f cueBallPos) {
     this->start = cueBallPos;
     this->dragging = false;
+  
+    // Load the cue hit sound effect when the Cue object is created
+    if (!cueHitBuffer.loadFromFile("assets/sounds/cueball.ogg")) {
+        std::cerr << "Error loading cue hit sound effect" << std::endl;
+        throw std::runtime_error("Failed to load cue hit sound effect");
+    }
+
+    cueHitSound.setBuffer(cueHitBuffer);
+
 }
 
 void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ballsList) {
@@ -60,8 +73,10 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall, std::vector<Ball>
             start = mousePos;
             dragging = true;
         }
+
         this->position = cueBall->Position + distance * direction;
     } else if (dragging) {
+        cueHitSound.play();
         // We just released the mouse, launch the ball
         cueBall->Velocity = -direction * BASE_POWER * distance * CUE_BALL_RESTITUTION_COEFFICIENT;
         dragging = false;

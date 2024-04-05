@@ -74,9 +74,11 @@ int main() {
 
     sf::Clock clock;
 
+    
+
     // Music
     sf::Music backgroundMusic;
-    if (!backgroundMusic.openFromFile("assets/sounds/tatum.ogg"))  // Use your music file path here
+    if (!backgroundMusic.openFromFile("assets/sounds/tatum.ogg")) 
     {
         return -1;  // Error loading the file
     }
@@ -84,9 +86,9 @@ int main() {
     backgroundMusic.setLoop(true);  // Make the music loop
     backgroundMusic.play();
 
-    // Music
+    // Ambience Crowd
     sf::Music ambienceCrowd;
-    if (!ambienceCrowd.openFromFile("assets/sounds/ambience.ogg"))  // Use your music file path here
+    if (!ambienceCrowd.openFromFile("assets/sounds/ambience.ogg"))
     {
         return -1;  // Error loading the file
     }
@@ -169,6 +171,39 @@ int main() {
 
     Scene currentScene = Scene::MainMenu;
 
+    // Ball pocketed
+    sf::SoundBuffer ballPocketedBuffer;
+    sf::Sound ballPocketedSound;
+
+    if (!ballPocketedBuffer.loadFromFile("assets/sounds/ball_in.ogg")) {
+        std::cerr << "Error loading ball in hit sound effect" << std::endl;
+        return -1;
+    }
+
+    ballPocketedSound.setBuffer(ballPocketedBuffer);
+    ballPocketedSound.setVolume(100.f);
+
+    /*
+    // ... ball hit
+    sf::SoundBuffer ballHitBuffer;
+    sf::Sound ballHitSound;
+
+    if (!ballHitBuffer.loadFromFile("assets/sounds/cueball_plus_one.ogg")) {
+        std::cerr << "Error loading ball hit sound effect" << std::endl;
+        return -1;
+    }
+
+    // Multiple balls hit
+    sf::SoundBuffer multipleBallsHitBuffer;
+    sf::Sound multipleBallsHitSound;
+
+    if (!multipleBallsHitBuffer.loadFromFile("assets/sounds/cue_ball_multiple.ogg")) {
+        std::cerr << "Error loading multiple balls hit sound effect" << std::endl;
+        return -1;
+    }
+
+    */
+
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -215,6 +250,8 @@ int main() {
                 for (auto &pocket : pocketList) {
                     // Check if ball came in contact with any of the pockets
                     if (pocket.isBallInPocket(ballsList[i])) {
+                        ballPocketedSound.play();
+
                         // std::cout << "The ball has fallen!" << "\n";
                         ballsList[i].setInactive();
                     }
