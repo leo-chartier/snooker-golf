@@ -8,13 +8,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle) {
-    this->position = position;
-    this->rotation = rotation;
-    this->power = 0;
-    this->angle = 0;
-    this->check = false;
-    this->startSet = false;
+Cue::Cue(Vector2f cueBallPos) {
+    this->start = cueBallPos;
+    this->dragging = false;
 }
 
 void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ballsList) {
@@ -26,29 +22,18 @@ void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ba
             return;
         }
     }
-    if (!check){
-        position = cueBall.Position;
-    }
+
     sf::Vector2f size = sf::Vector2f(CUE_LENGTH, CUE_TIP_WIDTH);
     sf::RectangleShape cueR = sf::RectangleShape(size);
     cueR.setFillColor(sf::Color::White);
 
-    cueR.setOrigin( - 2*BALL_RADIUS, CUE_TIP_WIDTH/2);
+    cueR.setOrigin(-2 * BALL_RADIUS, CUE_TIP_WIDTH / 2);
     cueR.setPosition(position.x, position.y);
 
-    // Scale the coordinates of the mouse to the view of the window
-    sf::Vector2f scaledMouse = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-    // Calculate the difference between the scaled mouse position and the cue ball position
-    float dx = scaledMouse.x - cueBall.Position.x;
-    float dy = scaledMouse.y - cueBall.Position.y;
-
     // Calculate the angle between the cue ball and the mouse position
-    float angleCueR = atan2(dy, dx);
-    angleCueR = angleCueR * 180 / M_PI;
+    float angleCueR = atan2(direction.y, direction.x) * 180 / M_PI;
+    // printf("%f %f %f\n", direction.x, direction.y, angleCueR);
     cueR.setRotation(angleCueR);
-    angle = angleCueR;
-
 
     window->draw(cueR);
 }
@@ -62,24 +47,27 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall, std::vector<Ball>
             return;
         }
     }
+
+    // Pre-calculate values
+    Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    this->direction = normalize(mousePos - start);
+    float distance = vectorLength(mousePos - start);
+    distance = std::min(distance, 20 * BALL_RADIUS);
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        if (!startSet){
-            start = sf::Mouse::getPosition(window);
-            check = true;
-            startSet = true;
+        // Setting position
+        if (!dragging){
+            start = mousePos;
+            dragging = true;
         }
-        
-        sf::Vector2f mouse = (sf::Vector2f)sf::Mouse::getPosition(window);
-        sf::Vector2f scaledMouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        sf::Vector2f scaledStart = (sf::Vector2f)window.mapPixelToCoords(start);
-        position = sf::Vector2f(cueBall->Position.x + scaledMouse.x - scaledStart.x, cueBall->Position.y + scaledMouse.y - scaledStart.y);
-    }
-    else if (check) {
-        end = sf::Mouse::getPosition(window);
-        check = false;
-        startSet = false;
-        power = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2)) * CUE_BALL_RESTITUTION_COEFFICIENT;
-        position = cueBall->Position;
-        cueBall->Velocity = sf::Vector2f(-power * cos(angle * M_PI / 180), -power * sin(angle * M_PI / 180));
+        this->position = cueBall->Position + distance * direction;
+    } else if (dragging) {
+        // We just released the mouse, launch the ball
+        cueBall->Velocity = -direction * BASE_POWER * distance * CUE_BALL_RESTITUTION_COEFFICIENT;
+        dragging = false;
+    } else {
+        // Freely moving around
+        this->direction = normalize(mousePos - cueBall->Position);
+        this->position = cueBall->Position;
     }
 }

@@ -55,7 +55,7 @@ int main() {
         }
     }
 
-    Cue cue = Cue(cueBall.Position, Vector2f(0, 0), 0, 0);
+    Cue cue = Cue(map.cueBallStart);
 
     Player player = Player(0, 0);
     ScoreBoard score = ScoreBoard(player);
