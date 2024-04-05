@@ -10,6 +10,7 @@
 #include "display.cpp"
 #include "player.cpp"
 #include "pocket.cpp"
+#include "map.hpp"
 #include "table.cpp"
 
 using namespace std;
@@ -26,59 +27,30 @@ int main() {
     VideoMode desktop = sf::VideoMode::getDesktopMode();
     window.setPosition(Vector2i(desktop.width / 2 - window.getSize().x / 2, desktop.height / 2 - window.getSize().y / 2));
 
-    Vector2f vertices[] = {
-        Vector2f(0, 144),
-        Vector2f(192, 144),
-        Vector2f(192, 88.58),
-        Vector2f(182.06, 81.94),
-        Vector2f(171.65, 66.37),
-        Vector2f(168, 48),
-        Vector2f(171.65, 29.63),
-        Vector2f(182.06, 14.06),
-        Vector2f(197.63, 3.65),
-        Vector2f(216, 0),
-        Vector2f(234.37, 3.65),
-        Vector2f(249.94, 14.06),
-        Vector2f(260.35, 29.63),
-        Vector2f(264, 48),
-        Vector2f(260.35, 66.37),
-        Vector2f(249.94, 81.94),
-        Vector2f(240, 88.58),
-        Vector2f(240, 144),
-        Vector2f(264, 144),
-        Vector2f(291.55, 149.48),
-        Vector2f(314.91, 165.09),
-        Vector2f(330.52, 188.45),
-        Vector2f(336, 216),
-        Vector2f(330.52, 243.56),
-        Vector2f(314.91, 266.91),
-        Vector2f(291.55, 282.52),
-        Vector2f(264, 288),
-        Vector2f(236.44, 282.52),
-        Vector2f(213.09, 266.91),
-        Vector2f(197.48, 243.56),
-        Vector2f(192, 216),
-        Vector2f(192, 192),
-        Vector2f(0, 192),
-    };
-    size_t nVertices = sizeof(vertices) / sizeof(Vector2f);
-    Table table = Table(vertices, nVertices);
+    srand(time(NULL));
+    size_t mapIndex = rand() % NB_MAPS;
+    map_t map = maps[mapIndex];
+
+    Table table = Table(map.borderPoints);
 
     // The list of pockets
-    std::vector<Pocket> pocketList = {
-        Pocket(Vector2f(216, 48), 2),  // TEMP : Set the hole radius to 2 for now but should be tied to mouth size
-    };
+    std::vector<Pocket> pocketList;
+    for (Vector2f position : map.pocketsPositions) {
+        pocketList.push_back(Pocket(position, POCKET_RADIUS));
+    }
 
-    CueBall cueBall = CueBall(Vector2f(24, 168), BALL_RADIUS, CUE_BALL_COLOR);
+    CueBall cueBall = CueBall(map.cueBallStart, BALL_RADIUS, CUE_BALL_COLOR);
 
-    double x0 = cueBall.Position.x + 48.0;
-    double y0 = cueBall.Position.y;
     vector<Ball> ballsList;
+    Vector2f u = normalize(map.ballsStart - map.cueBallStart);
+    Vector2f v = Vector2f(u.y, -u.x);
+    const float brsqrt3 = BALL_RADIUS * sqrt(3);
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j <= i; j++) {
-            double x = x0 + i * BALL_RADIUS * sqrt(3);
-            double y = y0 + (j * 2 - i) * BALL_RADIUS;
-            Ball ball = Ball(Vector2f(x, y), BALL_RADIUS, BALL_COLOR);
+            Vector2f du = i * brsqrt3 * u;
+            Vector2f dv = (j * 2 - i) * BALL_RADIUS * v;
+            Vector2f position = map.ballsStart + du + dv;
+            Ball ball = Ball(position, BALL_RADIUS, BALL_COLOR);
             ballsList.push_back(ball);
         }
     }
@@ -237,14 +209,14 @@ int main() {
                 }
 
                 if (cueBall.IsActive()) {
-                    cueBall.Update(dt, ballsList, vertices, nVertices);
+                    cueBall.Update(dt, ballsList, map.borderPoints);
                 }
 
                 if (ballsList[i].IsActive()) {
-                    ballsList[i].Update(dt, ballsList, vertices, nVertices);
+                    ballsList[i].Update(dt, ballsList, map.borderPoints);
                 }
             }
-            cueBall.replace();
+            cueBall.replace(map.cueBallStart);
 
             // test(&window);
             drawGame(&window, ballsList, &cue, &cueBall, &table, pocketList, &score);  // The number after pocketlist represents the number of pockets to draw

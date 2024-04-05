@@ -46,7 +46,7 @@ int orientation(Vector2f p, Vector2f q, Vector2f r) {
     float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
     if (val == 0)
         return 0;  // Collinear
-    return (val > 0) ? 1 : 2; // Clockwise or counterclockwise
+    return (val > 0) ? 1 : -1; // Clockwise or counterclockwise
 }
 
 bool isOnSegment(Vector2f p, Vector2f q, Vector2f r) {
