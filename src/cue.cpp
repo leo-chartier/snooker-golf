@@ -8,6 +8,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+
+
+// Load sound effects: cue hit
+sf::SoundBuffer cueHitBuffer;
+sf::Sound cueHitSound;
+
+
 Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle) {
     this->position = position;
     this->rotation = rotation;
@@ -15,6 +22,14 @@ Cue::Cue(sf::Vector2f position, sf::Vector2f rotation, float power, float angle)
     this->angle = 0;
     this->check = false;
     this->startSet = false;
+
+    // Load the cue hit sound effect when the Cue object is created
+    if (!cueHitBuffer.loadFromFile("assets/sounds/cueball.ogg")) {
+        std::cerr << "Error loading cue hit sound effect" << std::endl;
+        throw std::runtime_error("Failed to load cue hit sound effect");
+    }
+
+    cueHitSound.setBuffer(cueHitBuffer);
 }
 
 void Cue::Draw(sf::RenderWindow* window, CueBall &cueBall, std::vector<Ball> &ballsList) {
@@ -75,6 +90,7 @@ void Cue::setPower(sf::RenderWindow &window, CueBall *cueBall, std::vector<Ball>
         position = sf::Vector2f(cueBall->Position.x + scaledMouse.x - scaledStart.x, cueBall->Position.y + scaledMouse.y - scaledStart.y);
     }
     else if (check) {
+        cueHitSound.play();
         end = sf::Mouse::getPosition(window);
         check = false;
         startSet = false;
