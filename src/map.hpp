@@ -1,8 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "pocket.hpp"
-#include "balls.hpp"
+#include "measurements.hpp"
 
 using namespace sf;
 
@@ -13,45 +12,89 @@ typedef struct map{
     std::vector<Vector2f> pocketsPositions;
 }map_t;
 
+map_t mapClassic {
+    {
+        Vector2f(0, 0),
+        Vector2f(CLASSIC_WIDTH, 0),
+        Vector2f(CLASSIC_WIDTH, CLASSIC_HEIGHT),
+        Vector2f(0, CLASSIC_HEIGHT),
+    },
+    Vector2f(CLASSIC_WIDTH / 4, CLASSIC_HEIGHT / 2),
+    Vector2f(CLASSIC_WIDTH * 3 / 4, CLASSIC_HEIGHT / 2),
+    {
+        Vector2f(POCKET_RADIUS, POCKET_RADIUS),
+        Vector2f(CLASSIC_WIDTH / 2, POCKET_RADIUS),
+        Vector2f(CLASSIC_WIDTH - POCKET_RADIUS, POCKET_RADIUS),
+        Vector2f(CLASSIC_WIDTH - POCKET_RADIUS, CLASSIC_HEIGHT - POCKET_RADIUS),
+        Vector2f(CLASSIC_WIDTH / 2, CLASSIC_HEIGHT - POCKET_RADIUS),
+        Vector2f(POCKET_RADIUS, CLASSIC_HEIGHT - POCKET_RADIUS),
+    }
+};
+
 map_t mapLoop {
     {
-        Vector2f(0, 144),
-        Vector2f(192, 144),
-        Vector2f(192, 88.58),
-        Vector2f(182.06, 81.94),
-        Vector2f(171.65, 66.37),
-        Vector2f(168, 48),
-        Vector2f(171.65, 29.63),
-        Vector2f(182.06, 14.06),
-        Vector2f(197.63, 3.65),
-        Vector2f(216, 0),
-        Vector2f(234.37, 3.65),
-        Vector2f(249.94, 14.06),
-        Vector2f(260.35, 29.63),
-        Vector2f(264, 48),
-        Vector2f(260.35, 66.37),
-        Vector2f(249.94, 81.94),
-        Vector2f(240, 88.58),
-        Vector2f(240, 144),
-        Vector2f(264, 144),
-        Vector2f(291.55, 149.48),
-        Vector2f(314.91, 165.09),
-        Vector2f(330.52, 188.45),
-        Vector2f(336, 216),
-        Vector2f(330.52, 243.56),
-        Vector2f(314.91, 266.91),
-        Vector2f(291.55, 282.52),
-        Vector2f(264, 288),
-        Vector2f(236.44, 282.52),
-        Vector2f(213.09, 266.91),
-        Vector2f(197.48, 243.56),
-        Vector2f(192, 216),
-        Vector2f(192, 192),
-        Vector2f(0, 192),
+        Vector2f(0, 72),
+        Vector2f(96, 72),
+        Vector2f(96, 44.29),
+        Vector2f(91.03, 40.97),
+        Vector2f(85.825, 33.185),
+        Vector2f(84, 24),
+        Vector2f(85.825, 14.815),
+        Vector2f(91.03, 7.03),
+        Vector2f(98.815, 1.825),
+        Vector2f(108, 0),
+        Vector2f(117.185, 1.825),
+        Vector2f(124.97, 7.03),
+        Vector2f(130.175, 14.815),
+        Vector2f(132, 24),
+        Vector2f(130.175, 33.185),
+        Vector2f(124.97, 40.97),
+        Vector2f(120, 44.29),
+        Vector2f(120, 72),
+        Vector2f(132, 72),
+        Vector2f(145.775, 74.74),
+        Vector2f(157.455, 82.545),
+        Vector2f(165.26, 94.225),
+        Vector2f(168, 108),
+        Vector2f(165.26, 121.78),
+        Vector2f(157.455, 133.455),
+        Vector2f(145.775, 141.26),
+        Vector2f(132, 144),
+        Vector2f(118.22, 141.26),
+        Vector2f(106.545, 133.455),
+        Vector2f(98.74, 121.78),
+        Vector2f(96, 108),
+        Vector2f(96, 96),
+        Vector2f(0, 96),
     },
-    Vector2f(24, 168),
-    Vector2f(24 + 48, 168),
+    Vector2f(12, 84),
+    Vector2f(12 + 24, 84),
     {
-        Vector2f(216, 48),
+        Vector2f(108, 24),
     },
+};
+
+map_t mapM {
+    {
+        Vector2f(4, 0),
+        Vector2f(92, 0),
+        Vector2f(96, 4),
+        Vector2f(96, 48),
+        Vector2f(80, 48),
+        Vector2f(60, 24),
+        Vector2f(60, 44),
+        Vector2f(56, 48),
+        Vector2f(40, 48),
+        Vector2f(36, 44),
+        Vector2f(36, 24),
+        Vector2f(16, 48),
+        Vector2f(0, 48),
+        Vector2f(0, 4),
+    },
+    Vector2f(48, 36),
+    Vector2f(48, 24),
+    {
+        Vector2f(POCKET_RADIUS, 48-POCKET_RADIUS),
+        Vector2f(96-POCKET_RADIUS, 48-POCKET_RADIUS),
+    }
 };
