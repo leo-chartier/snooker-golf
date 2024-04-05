@@ -9,7 +9,7 @@
 
 const unsigned int SCREEN_W = 1200;
 const unsigned int SCREEN_H = 800;
-#define TITLE "SFML TITLE"
+#define TITLE "Snooker Golf"
 
 float windowScale = 1.0f;
 
